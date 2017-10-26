@@ -11,7 +11,8 @@ class Login {
       this.passwords = this.passwords.concat([e.v]);
     });
   }
-
+  
+  // User logout
   logout(user) {
     this.sessions.forEach((session, i) => {
       if (session === user) {
@@ -41,6 +42,7 @@ class Login {
     this.passwords[lastIndex] = password;
   }
 
+  // Remove user
   removeUser(user) {
     let index = this.idx(user, this.users);
     this.users[index] = null;
@@ -49,34 +51,38 @@ class Login {
     this.passwords = this.passwords.filter(password => password !== null);
   }
 
+  // Check password for a user
   checkPassword(user, password) {
     let index = this.idx(user, this.users);
     let passwordCorrect = this.passwords[index] === password;
     return passwordCorrect;
   }
 
+  // Update password for a user with a new value
   updatePassword(user, oldPassword, newPassword) {
-    // First we check if the user exists
-    let user1 = '';
-    for (let i of this.users) {
-      if (i === user) {
-        user1 = user;
+    // First, we check if the user exists.
+    if (userExists(user)) {
+      // Then, we check the password of the user with the value of 'oldPassword'.
+		if (checkPassword(user, oldPassword)) {
+			// Finally, if the above conditions are met then we set the new password to the value of 'newPassword'
+			// and return true.
+			this.passwords[index] = newPassword;
+			return true;
       }
     }
-    if (user1 === user) {
-      let index = this.idx(user, this.users);
-      if (this.passwords[index] === oldPassword) {
-        this.passwords[index] = newPassword;
-        return true;
-      }
-    }
+	// If none of the above conditions is met, then we return false.
     return false;
   }
 
+  // User login
   login(user, password) {
-    let index = this.idx(user, this.users);
-    if (this.passwords[index] === password) {
-      this.sessions.push(user);
+	// First, we check if the user exists.
+    if (userExists(user)) {
+		// Then, we check the password of the user with the value of 'password'.
+		if (checkPassword(user, password)) {
+			// Finally, if the above conditions are met then we add a new session for the user 'user'.
+			this.sessions.push(user);
+		}
     }
   }
 
@@ -93,6 +99,8 @@ class Login {
   }
 }
 
+
+// Start of execution of the main program
 let registeredUsers = {
   user1: 'pass1',
   user2: 'pass2',
@@ -107,3 +115,4 @@ login.updatePassword('user3', 'pass3', 'pass5');
 login.login('user3', 'pass5');
 login.logout('user4');
 login.logout('user3');
+// End of execution of the main program
