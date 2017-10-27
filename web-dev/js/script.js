@@ -1,24 +1,36 @@
+var idxPlayer01;
+var idxPlayer02;
+
 $(function () {
+  idxPlayer01 = 1;
+  idxPlayer02 = 2
   $("#btnDealCardsP01").prop("disabled", true);
   $("#btnDealCardsP02").prop("disabled", true);
 });
 
 function shuffleDeck() {
+  // Set url for Dealer Service
   var url = "https://services.comparaonline.com/dealer/deck";
-  var response;
-  $.post(
-    url,
-    function (data) {
-      response = data;
-      $("#hidDeckId").val(response);
-      $("#txtDeckId").val(response);
-      $("#btnDealCardsP01").prop("disabled", false);
-      $("#btnDealCardsP02").prop("disabled", false);
-    }
-  );
+  var responseData;
+  $.post(url, function (data) {
+    responseData = data;
+    $("#hidDeckId").val(responseData);
+    $("#btnDealCardsP01").prop("disabled", false);
+    $("#btnDealCardsP02").prop("disabled", false);
+  })
+  .fail(function() {
+    $("#hidDeckId").val("");
+    $("#btnDealCardsP01").prop("disabled", true);
+    $("#btnDealCardsP02").prop("disabled", true);
+  });
 }
 
-function dealCards(idxPlayer) {
+function dealAllCards() {
+  dealCardsPlayer(idxPlayer01);
+  dealCardsPlayer(idxPlayer02);
+}
+
+function dealCardsPlayer(idxPlayer) {
   var tokenDeck = $("#hidDeckId").val();
   var amountCardsByHand = 5;
   var url = "https://services.comparaonline.com/dealer/deck/" + tokenDeck + "/deal/" + amountCardsByHand;
@@ -36,11 +48,11 @@ function dealCards(idxPlayer) {
       });
       htmlCards += "</div>";
       switch (idxPlayer) {
-        case 1:
+        case idxPlayer01:
           $("#artHandP01").html("");
           $("#artHandP01").html(htmlCards);
           break;
-        case 2:
+        case idxPlayer02:
           $("#artHandP02").html("");
           $("#artHandP02").html(htmlCards);
           break;

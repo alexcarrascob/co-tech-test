@@ -5,7 +5,7 @@
     <title>CO Web Development</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/styles.css">
-    <script src="js/jquery-3.2.1.js"></script>
+    <script src="js/jquery/jquery-3.2.1.js"></script>
     <script src="js/script.js" charset="utf-8"></script>
   </head>
   <body>
@@ -18,25 +18,20 @@
       </header>
       <article id="artMenuActions">
         <div>
-          <input type="button" id="btnDealCardsP01" name="btnDealCardsP01" value="Deal Cards to Player 01" onclick="dealCards(1);">
           <input type="button" id="btnShuffleDeck" name="btnShuffleDeck" value="Shuffle Deck" onclick="shuffleDeck();">
-          <input type="button" id="btnDealCardsP02" name="btnDealCardsP02" value="Deal Cards to Player 02" onclick="dealCards(2);">
+          <input type="button" id="btnDealCards" name="btnDealCards" value="Deal Cards" onclick="dealAllCards();">
         </div>
         <br class="clearBoth"><br>
         <input type="hidden" id="hidDeckId" name="hidDeckId" value="">
-        <!-- <input type="text" id="txtDeckId" name="txtDeckId" value="" disabled> -->
+        <input type="text" id="txtDeckId" name="txtDeckId" value="" style="position: relative; " disabled>
       </article>
     </section>
     <section id="secHands">
       <header>
         <span>Players Hands</span>
       </header>
-      <article id="artHandP01">
-
-      </article>
-      <article id="artHandP02">
-
-      </article>
+      <article id="artHandP01" />
+      <article id="artHandP02" />
       <br class="clearBoth">
     </section>
     <footer>
