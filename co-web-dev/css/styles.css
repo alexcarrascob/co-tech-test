@@ -1,0 +1,46 @@
+#txtDeckId {
+  width: 400px;
+}
+
+.clearBoth {
+  clear: both;
+}
+
+#secActions {
+  width: 500px;
+  height: 150px;
+}
+
+#secActions > header {
+  height: 50px;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+#secActions > article {
+  width: 500px;
+  height: 50px;
+}
+
+#secActions > article > div {
+  float: left;
+}
+
+#secHands {
+  width: 500px;
+  height: 400px;
+}
+
+#secHands > header {
+  height: 50px;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+#secHands > article {
+  width: 200px;
+  height: 300px;
+  float: left;
+  border: 3px solid #000000;
+  text-align: center;
+}
