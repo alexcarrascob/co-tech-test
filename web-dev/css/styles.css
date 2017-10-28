@@ -1,46 +1,121 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 .clearBoth {
   clear: both;
 }
 
+#headView {
+  position: relative;
+  display: block;
+  width: 1000px;
+  height: 50px;
+  font-weight: bold;
+  font-style: italic;
+}
+
+#containerView {
+  position: relative;
+  display: block;
+  width: 1000px;
+  height: 600px;
+}
+
+#footView {
+  position: relative;
+  display: block;
+  width: 1000px;
+  height: 50px;
+  font-weight: bold;
+  font-style: italic;
+}
+
+section > h3 {
+  position: relative;
+  font-weight: bold;
+  font-style: italic;
+  text-align: left;
+}
+
 #secActions {
+  position: relative;
+  display: block;
   width: 500px;
   height: 100px;
 }
 
-#secActions > header {
-  position: relative;
-  height: 50px;
-  font-weight: bold;
-  font-size: 24px;
-}
-
-#secActions > article {
-  position: relative;
+#blkMenuActions {
+  display: block;
   width: 500px;
   height: 50px;
+  float: left;
 }
 
-#secActions > article > div {
-  float: left;
+#txtDeckId {
+  display: block;
+}
+
+#secMessages {
+  position: relative;
+  width: 400px;
+  height: 50px;
+}
+
+#blkMessages {
+  width: 400px;
+  height: 40px;
+  text-align: left;
+}
+
+.messageVisible {
+  display: block;
+}
+
+.messageNotVisible {
+  display: none;
+}
+
+.messageOK {
+  font-weight: bold;
+  font-size: 14px;
+  color: #d6f5d6;
+  background-color: #33cc33;
+}
+
+.messageError {
+  font-weight: bold;
+  font-size: 14px;
+  color: #ffd6cc;
+  background-color: #cc3300;
+}
+
+.messageOther {
+  font-weight: bold;
+  font-size: 14px;
+  color: #000099;
+  background-color: #3399ff;
 }
 
 #secHands {
+  position: relative;
   width: 500px;
   height: 400px;
+  text-align: center;
 }
 
-#secHands > header {
-  position: relative;
-  height: 50px;
-  font-weight: bold;
-  font-size: 24px;
+.tableCards {
+  display: block;
+  border: 2px solid #000000;
+  width: 490px;
+  height: 120px;
+  text-align: center;
 }
 
-#secHands > article {
-  position: relative;
-  width: 200px;
-  height: 300px;
-  float: left;
-  border: 3px solid #000000;
+#blkResultPoker {
+  display: block;
+  border-width: 0px;
+  width: 490px;
+  height: 75px;
   text-align: center;
 }

@@ -1,0 +1,3 @@
+- Change jQuery methods jQuery.getJSON and jQuery.post with jQuery.ajax to access the status code of the response and follow different actions according to this condition.
+- Use CSS library "CSS Playing Cards" (ref. @author Anika Henke - @link http://selfthinker.github.com/CSS-Playing-Cards/) to display graphical playing cards received in JSON format from Dealer Service.
+- Start to commit in Git repository using commit messages files with multiline description, starting from this message in the file /_commit-messages/commit-message-01.txt

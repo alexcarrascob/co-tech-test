@@ -1,64 +1,130 @@
-var idxPlayer01;
-var idxPlayer02;
-
+// Execute when the view loads.
 $(function () {
-  idxPlayer01 = 1;
-  idxPlayer02 = 2
-  $("#btnDealCardsP01").prop("disabled", true);
-  $("#btnDealCardsP02").prop("disabled", true);
+  codeMessage = "";
+  typeMessage = "";
+  descriptionMessage = "";
+  fullMessage = "";
+  classesMessage = "";
+  idxPlayer1 = 1;
+  idxPlayer2 = 2;
+  $("#btnDealCards").prop("disabled", true);
+  emptyAllTableCards();
+  emptyMessages();
 });
 
-function shuffleDeck() {
-  // Set url for Dealer Service
-  var url = "https://services.comparaonline.com/dealer/deck";
-  var responseData;
-  $.post(url, function (data) {
-    responseData = data;
-    $("#hidDeckId").val(responseData);
-    $("#btnDealCardsP01").prop("disabled", false);
-    $("#btnDealCardsP02").prop("disabled", false);
-  })
-  .fail(function() {
-    $("#hidDeckId").val("");
-    $("#btnDealCardsP01").prop("disabled", true);
-    $("#btnDealCardsP02").prop("disabled", true);
-  });
-}
-
-function dealAllCards() {
-  dealCardsPlayer(idxPlayer01);
-  dealCardsPlayer(idxPlayer02);
-}
-
-function dealCardsPlayer(idxPlayer) {
-  var tokenDeck = $("#hidDeckId").val();
-  var amountCardsByHand = 5;
-  var url = "https://services.comparaonline.com/dealer/deck/" + tokenDeck + "/deal/" + amountCardsByHand;
-  var response, htmlCards;
-  $.getJSON(
-    url,
-    function (data) {
-      response = data;
-      htmlCards = "<div>";
-      $.each(response, function (key, val) {
-        $.each(val, function (key2, val2) {
-          htmlCards += "{" + key2  + ":" + val2 + "}";
-          htmlCards += "<br>";
-        });
-      });
-      htmlCards += "</div>";
-      switch (idxPlayer) {
-        case idxPlayer01:
-          $("#artHandP01").html("");
-          $("#artHandP01").html(htmlCards);
-          break;
-        case idxPlayer02:
-          $("#artHandP02").html("");
-          $("#artHandP02").html(htmlCards);
-          break;
-        default:
-          break;
-      }
+// Function AJAX to shuffle the deck.
+function shuffleDeckAJAX() {
+  // Set uri for Dealer Service
+  var uri = "https://services.comparaonline.com/dealer/deck";
+  // Declare and set initially some useful local response variables
+  // for the Dealer service
+  var responseData = null;
+  var responseStatusCode = 0;
+  console.log("1) responseStatusCode = " + responseStatusCode);
+  // Call to the POST method of the Dealer service to shuffle the deck
+  $.ajax({
+    type: "post",
+    url: uri,
+    success: function (data) {
+      responseData = data;
+      $("#hidDeckId").val(responseData);
+      $("#btnDealCards").prop("disabled", false);
+    },
+    error: function (data) {
+      responseData = data;
+      $("#hidDeckId").val("");
+      $("#btnDealCards").prop("disabled", true);
+    },
+    statusCode: getStatusCodesActionsForShuffleDeckService(),
+    complete: function (jqXHR, statusText) {
+      responseStatusCode = jqXHR.status;
+      console.log("2) responseStatusCode = " + responseStatusCode);
     }
-  );
+  });
+  console.log("3) responseStatusCode = " + responseStatusCode);
+  // Return the status code of this operation
+  return responseStatusCode;
+}
+
+// Function AJAX to deal the cards from the deck to all players.
+function dealCardsAJAXForPlayer(idxPlayer) {
+  // Read the token of the deck
+  var tokenDeck = $("#hidDeckId").val();
+  // Set the amount of cards to deal to each player
+  var amountCardsByHand = 5;
+  // Set uri for Dealer Service
+  var uri = "https://services.comparaonline.com/dealer/deck/" + tokenDeck + "/deal/" + amountCardsByHand;
+  // Declare and set initially some useful local response variables
+  // for the Dealer service
+  var responseData = null;
+  var htmlCards = "";
+  var responseStatusCode = 0;
+  // Call to the GET method of the Dealer service to deal cards
+  // from the deck to all the players
+  $.ajax({
+    type: "get",
+    url: uri,
+    dataType: "json",
+    success: function (data) {
+      responseData = data;
+      for (var i = 0; i < amountCardsByHand; i++) {
+        var elem = "";
+        var number = responseData[i].number;
+        var suit = responseData[i].suit;
+        elem = number + "-" + suit;
+        console.log(i + " = " + elem);
+        htmlCards += elem;
+        if (i < amountCardsByHand - 1) {
+          htmlCards += "<br>";
+        }
+      }
+      $("#blkTableCardsP" + idxPlayer).html(htmlCards);
+    },
+    error: function (data) {
+      responseData = data;
+    },
+    statusCode: getStatusCodesActionsForDealHandService(),
+    complete: function (xhr, statusText) {
+      responseStatusCode = xhr.status;
+    }
+  });
+  // Return the status code of this operation
+  return responseStatusCode;
+}
+
+// Function to shuffle the deck.
+function shuffleDeck() {
+  // Empty the table cards of all the players
+  emptyAllTableCards();
+  //Empty all the current messages
+  emptyMessages();
+  // Deal cards from deck to Player #1
+  var statusCode1 = shuffleDeckAJAX();
+  console.log("4) statusCode1 = " + statusCode1);
+  // Show message according to status codes obtained
+  // from all the service callings
+  var arrStatusCodes = [];
+  arrStatusCodes[0] = statusCode1;
+  console.log("5) arrStatusCodes[0] = " + arrStatusCodes[0]);
+  generateTypeMessages(arrStatusCodes);
+  showMessages();
+}
+
+// Function to deal the cards from the deck to all players.
+function dealAllCards() {
+  // Empty the table cards of all the players
+  emptyAllTableCards();
+  //Empty all the current messages
+  emptyMessages();
+  // Deal cards from deck to Player #1
+  var statusCode1 = dealCardsAJAXForPlayer(idxPlayer1);
+  // Deal cards from deck to Player #2
+  var statusCode2 = dealCardsAJAXForPlayer(idxPlayer2);
+  // Show message according to status codes obtained
+  // from all the service callings
+  var arrStatusCodes = [];
+  arrStatusCodes[0] = statusCode1;
+  arrStatusCodes[1] = statusCode2;
+  generateTypeMessages(arrStatusCodes);
+  showMessages();
 }

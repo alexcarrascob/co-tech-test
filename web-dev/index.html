@@ -6,38 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/jquery/jquery-3.2.1.js"></script>
+    <script src="js/global-vars.js" charset="utf-8"></script>
+    <script src="js/utils.js" charset="utf-8"></script>
     <script src="js/script.js" charset="utf-8"></script>
   </head>
+
   <body>
-    <header>
+    <header id="headView">
       <h1>CO Web Development</h1>
     </header>
-    <section id="secActions">
-      <header>
-        <span>Actions</span>
-      </header>
-      <article id="artMenuActions">
-        <div>
+
+    <div id="containerView">
+      <section id="secActions">
+        <h3>Actions</h3>
+        <div id="blkMenuActions">
           <input type="button" id="btnShuffleDeck" name="btnShuffleDeck" value="Shuffle Deck" onclick="shuffleDeck();">
           <input type="button" id="btnDealCards" name="btnDealCards" value="Deal Cards" onclick="dealAllCards();">
         </div>
-        <br class="clearBoth"><br>
+        <input type="text" id="txtDeckId" name="txtDeckId" value="" style="display: none; width: 250px;" disabled>
         <input type="hidden" id="hidDeckId" name="hidDeckId" value="">
-        <input type="text" id="txtDeckId" name="txtDeckId" value="" style="position: relative; " disabled>
-      </article>
-    </section>
-    <section id="secHands">
-      <header>
-        <span>Players Hands</span>
-      </header>
-      <article id="artHandP01" />
-      <article id="artHandP02" />
-      <br class="clearBoth">
-    </section>
-    <footer>
-      <p>
+      </section>
+
+      <section id="secHands">
+        <h3>Players Hands</h3>
+        <div id="blkTableCardsP1" class="tableCards"></div>
+        <div id="blkResultPoker"></div>
+        <div id="blkTableCardsP2" class="tableCards"></div>
+      </section>
+
+      <section id="secMessages">
+        <div id="blkMessages"></div>
+      </section>
+    </div>
+
+    <footer id="footView">
+      <div id="blkFooter">
         Author: Alex Ignacio Carrasco Barras
-      </p>
+      </div>
     </footer>
   </body>
 </html>
