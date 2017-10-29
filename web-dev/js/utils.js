@@ -106,3 +106,18 @@ function showMessages() {
   generateFullMessage();
   $("#blkMessages").html(fullMessage);
 }
+
+function paintTableCardsForPlayer(idxPlayer, dataCards, amountCards) {
+  var htmlCards = "";
+  for (var i = 0; i < amountCards; i++) {
+    var elem = "";
+    var number = dataCards[i].number;
+    var suit = dataCards[i].suit;
+    elem = number + "-" + suit;
+    htmlCards += elem;
+    if (i < amountCards - 1) {
+      htmlCards += "<br>";
+    }
+  }
+  $("#blkTableCardsP" + idxPlayer).html(htmlCards);
+}
