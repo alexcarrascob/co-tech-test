@@ -6,6 +6,8 @@ function emptyMessages() {
   descriptionMessage = "";
   fullMessage = "";
 
+  respStatCode = 0;
+
   $("#secMessages").removeClass();
   $("#blkMessages").removeClass();
 

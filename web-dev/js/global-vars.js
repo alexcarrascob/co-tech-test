@@ -10,3 +10,5 @@ var fullMessage;
 // Variables relative to the players.
 var idxPlayer1;
 var idxPlayer2;
+
+var respStatCode;
