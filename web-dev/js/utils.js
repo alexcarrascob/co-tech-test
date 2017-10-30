@@ -1,12 +1,23 @@
+// ========================================================================
+// SCRIPT WITH UTILITY FUNCTIONS USED IN THIS PROGRAM
+// ========================================================================
+
+// Function to initialize the general global variables to their default values
+function initGeneralVars() {
+  nameCurrentService = "";
+  argsCurrentService = "";
+  codeFinalCurrentService = "";
+}
+
 // Function to empty the message components in the view.
 function emptyMessages() {
+  initGeneralVars();
   codeMessage = "";
   typeMessage = "";
   classesMessage = "";
-  descriptionMessage = "";
   fullMessage = "";
-
-  respStatCode = 0;
+  descriptionMessage = "";
+  matrixMessages = [];
 
   $("#secMessages").removeClass();
   $("#blkMessages").removeClass();
@@ -19,6 +30,7 @@ function emptyMessages() {
 
 // Function to empty the table cards of all players.
 function emptyAllTableCards() {
+  listHands = [];
   $("#blkTableCardsP1").html("");
   $("#blkTableCardsP2").html("");
 }
@@ -29,16 +41,64 @@ function getDefaultErrorStatusCodesActions() {
   var listActions =
   {
     404: function() {
-      descriptionMessage = "Deck isn't found. It doesn’t exist or has expired.";
+      var scMes = 404;
+      var sourceMes = "";
+      if (argsCurrentService == "") {
+        sourceMes = nameCurrentService;
+      } else {
+        sourceMes = nameCurrentService + " / " + argsCurrentService;
+      }
+      var descMes = "Deck isn't found. It doesn’t exist or has expired.";
+      var listMes = [];
+      listMes["statusCode"] = scMes;
+      listMes["source"] = sourceMes;
+      listMes["description"] = descMes;
+      matrixMessages.push(listMes);
     },
     405: function() {
-      descriptionMessage = "There aren’t enough cards in the deck to deal the amount requested.";
+      var scMes = 405;
+      var sourceMes = "";
+      if (argsCurrentService == "") {
+        sourceMes = nameCurrentService;
+      } else {
+        sourceMes = nameCurrentService + " / " + argsCurrentService;
+      }
+      var descMes = "There aren’t enough cards in the deck to deal the amount requested.";
+      var listMes = [];
+      listMes["statusCode"] = scMes;
+      listMes["source"] = sourceMes;
+      listMes["description"] = descMes;
+      matrixMessages.push(listMes);
     },
     500: function() {
-      descriptionMessage = "An internal server error occurred.";
+      var scMes = 500;
+      var sourceMes = "";
+      if (argsCurrentService == "") {
+        sourceMes = nameCurrentService;
+      } else {
+        sourceMes = nameCurrentService + " / " + argsCurrentService;
+      }
+      var descMes = "An internal server error occurred.";
+      var listMes = [];
+      listMes["statusCode"] = scMes;
+      listMes["source"] = sourceMes;
+      listMes["description"] = descMes;
+      matrixMessages.push(listMes);
     },
     502: function() {
-      descriptionMessage = "Bad Getaway.";
+      var scMes = 502;
+      var sourceMes = "";
+      if (argsCurrentService == "") {
+        sourceMes = nameCurrentService;
+      } else {
+        sourceMes = nameCurrentService + " / " + argsCurrentService;
+      }
+      var descMes = "Bad Getaway.";
+      var listMes = [];
+      listMes["statusCode"] = scMes;
+      listMes["source"] = sourceMes;
+      listMes["description"] = descMes;
+      matrixMessages.push(listMes);
     }
   };
   return listActions;
@@ -50,7 +110,19 @@ function getStatusCodesActionsForShuffleDeckService() {
   var listOKActions =
   {
     200: function() {
-      descriptionMessage = "Deck shuffled successful.";
+      var scMes = 200;
+      var sourceMes = "";
+      if (argsCurrentService == "") {
+        sourceMes = nameCurrentService;
+      } else {
+        sourceMes = nameCurrentService + " / " + argsCurrentService;
+      }
+      var descMes = "Deck shuffled successful.";
+      var listMes = [];
+      listMes["statusCode"] = scMes;
+      listMes["source"] = sourceMes;
+      listMes["description"] = descMes;
+      matrixMessages.push(listMes);
     }
   };
   var listErrorActions = getDefaultErrorStatusCodesActions();
@@ -64,7 +136,19 @@ function getStatusCodesActionsForDealHandService() {
   var listOKActions =
   {
     200: function() {
-      descriptionMessage = "Hands dealt successful.";
+      var scMes = 200;
+      var sourceMes = "";
+      if (argsCurrentService == "") {
+        sourceMes = nameCurrentService;
+      } else {
+        sourceMes = nameCurrentService + " / " + argsCurrentService;
+      }
+      var descMes = "Hands dealt successful.";
+      var listMes = [];
+      listMes["statusCode"] = scMes;
+      listMes["source"] = sourceMes;
+      listMes["description"] = descMes;
+      matrixMessages.push(listMes);
     }
   };
   var listErrorActions = getDefaultErrorStatusCodesActions();
@@ -75,15 +159,13 @@ function getStatusCodesActionsForDealHandService() {
 // Function to determine the type of message to display of a service
 // based on a collection of status codes obtained
 // from multiple calls to this service.
-function generateTypeMessages(arrayStatusCodes) {
+function generateTypeMessage() {
   codeMessage = "OK";
   typeMessage = "Success";
   classesMessage = "messageOK";
-  console.log("Inside function generateTypeMessages(arrayStatusCodes)");
-  for (var i = 0; i < arrayStatusCodes.length; i++) {
-    console.log("-> arrayStatusCodes[" + i + "] = " + arrayStatusCodes[i]);
-    if (arrayStatusCodes[i] != 200) {
-      codeMessage = "ERR"
+  for (var i = 0; i < matrixMessages.length; i++) {
+    if (matrixMessages[i]["statusCode"] != 200) {
+      codeMessage = "ERR";
       typeMessage = "Error";
       classesMessage = "messageError";
     }
@@ -92,22 +174,39 @@ function generateTypeMessages(arrayStatusCodes) {
 
 // Function to generate the full message to display in the view.
 function generateFullMessage() {
-  fullMessage = typeMessage + ": " + descriptionMessage;
+  fullMessage = typeMessage + "<br><br>";
+  for (var i = 0; i < matrixMessages.length; i++) {
+    fullMessage += matrixMessages[i]["source"] + " : " + matrixMessages[i]["description"] + "<br>";
+  }
 }
 
 // Function to show the message in the view.
-function showMessages() {
+function showMessage() {
+  generateTypeMessage();
+  generateFullMessage();
   $("#secMessages").removeClass();
   $("#blkMessages").removeClass();
-
   $("#secMessages").addClass("messageVisible");
   $("#blkMessages").addClass("messageVisible " + classesMessage);
-
-  generateFullMessage();
   $("#blkMessages").html(fullMessage);
 }
 
-function paintTableCardsForPlayer(idxPlayer, dataCards, amountCards) {
+function setFinalStatusCodeService() {
+  codeFinalCurrentService = "OK";
+  for (var i = 0; i < matrixMessages.length; i++) {
+    if (matrixMessages[i]["statusCode"] != 200) {
+      codeFinalCurrentService = "ERR";
+    }
+  }
+}
+
+function paintAllTableCards() {
+  for (var i = 0; i < listHands.length; i++) {
+    paintTableCardsForPlayer(listHands[i].index, listHands[i].amountCards, listHands[i].cards);
+  }
+}
+
+function paintTableCardsForPlayer(idxPlayer, amountCards, dataCards) {
   var htmlCards = "";
   for (var i = 0; i < amountCards; i++) {
     var elem = "";
