@@ -3,8 +3,6 @@
 // ========================================================================
 
 // General variables used for this program
-var nameCurrentService;
-var argsCurrentService;
 var codeFinalCurrentService;
 
 // Variables relative to message to show in view.

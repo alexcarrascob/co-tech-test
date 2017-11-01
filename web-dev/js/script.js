@@ -8,21 +8,16 @@ var listHands;
 
 // Execute when the view loads.
 $(function () {
-  initGeneralVars();
+  // Empty the current hands of all players
   listHands = [];
-  codeMessage = "";
-  typeMessage = "";
-  classesMessage = "";
-  fullMessage = "";
-  descriptionMessage = "";
-  matrixMessages = [];
-  nameCurrentService = "";
-  argsCurrentService = "";
-  idxPlayer1 = 1;
-  idxPlayer2 = 2;
-  $("#btnDealCards").prop("disabled", true);
+  // Re-initialize the general global variables
+  initGeneralVars();
+  // Empty the table cards of all the players
   emptyAllTableCards();
+  //Empty all the current messages
   emptyMessages();
+  // Disable the button for Deal Cards to players.
+  $("#btnDealCards").prop("disabled", true);
 });
 
 // Function AJAX to shuffle the deck.
@@ -35,11 +30,14 @@ function shuffleDeckAJAX() {
   // Declare and set initially some useful local response variables
   // for the Dealer service
   var responseData = null;
+  var nameCurrentService = "Shuffle Deck";
+  var argsCurrentService = "";
+  var mapCustomServiceStatus = {};
+  mapCustomServiceStatus["200"] = "Deck shuffled successful.";
   // Call to the POST method of the Dealer service to shuffle the deck
   $.ajax({
     type: "post",
     url: uri,
-    async: false,
     success: function (data, textStatus, jqXHR) {
       responseData = data
       respStatCode = jqXHR.status;
@@ -51,31 +49,108 @@ function shuffleDeckAJAX() {
       $("#hidDeckId").val("");
       $("#btnDealCards").prop("disabled", true);
     },
-    statusCode: getStatusCodesActionsForShuffleDeckService()
+    statusCode: getStatusCodesActionsForShuffleDeckService(nameCurrentService, argsCurrentService, mapCustomServiceStatus)
   });
-  // Return the status code of this operation
-  return respStatCode;
 }
 
 // Function to shuffle the deck.
 function shuffleDeck() {
+  // Empty the current hands of all players
+  listHands = [];
   // Re-initialize the general global variables
   initGeneralVars();
   // Empty the table cards of all the players
   emptyAllTableCards();
   //Empty all the current messages
   emptyMessages();
-  // Set the general global variable relative to
-  // the current service
-  nameCurrentService = "Shuffle Deck"
-  // Set the general global variable relative to
-  // the current call of this service
-  argsCurrentService = "";
   // Deal cards from deck to Player #1
-  var statusCode1 = shuffleDeckAJAX();
+  shuffleDeckAJAX();
   // Set the final status code of the current service
   // according to status codes obtainerd from all the service callings
   setFinalStatusCodeService();
+  // Show message of the service
+  showMessage();
+}
+
+function dealAllCardsAJAX() {
+  // Read the token of the deck
+  var tokenDeck = $("#hidDeckId").val();
+  // Set uri for Dealer Service
+  var uri = "https://services.comparaonline.com/dealer/deck/" + tokenDeck + "/deal/" + amountCardsByHand;
+  // Declare and set initially some useful local response variables
+  // for the Dealer service
+  var responseData = null;
+  var currentStatusCode = 0;
+  var nameCurrentService = "Deal Cards";
+  for (var i = 0; i < totalPlayers; i++) {
+    var stringIndexCurrentPlayer = convertNumberToString(i);
+    var argsCurrentService = "Player #" + stringIndexCurrentPlayer;
+    var mapCustomServiceStatus = {};
+    mapCustomServiceStatus["200"] = "Hands dealt successful.";
+    mapCustomServiceStatus["404"] = "Deck isn't found. It doesn’t exist or has expired.";
+    mapCustomServiceStatus["405"] = "There aren’t enough cards in the deck to deal the amount requested.";
+
+    console.log("deal cards to player #" + stringIndexCurrentPlayer + " - 1) Ini - Uri: " + uri);
+
+    // Call to the GET method of the Dealer service to deal cards
+    // from the deck to all the players
+    $.ajax({
+      type: "get",
+      url: uri,
+      // async: false,
+      dataType: "json",
+      beforeSend: function (jqXHR) {
+        currentStatusCode =jqXHR.status;
+      },
+      success: function (data, textStatus, jqXHR) {
+        currentStatusCode =jqXHR.status;
+        argsCurrentService = "Player #" + convertNumberToString(stringIndexCurrentPlayer);
+        console.log("deal cards to player #" + stringIndexCurrentPlayer + " - 2) OK - status code: " + jqXHR.status);
+        console.log("argsCurrentService = " + argsCurrentService);
+        responseData = data;
+        var currentHand = {};
+        currentHand["index"] = 1;
+        currentHand["amountCards"] = amountCardsByHand;
+        currentHand["cards"] = responseData;
+        listHands.push(currentHand);
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        currentStatusCode =jqXHR.status;
+        argsCurrentService = "Player N" + convertNumberToString(stringIndexCurrentPlayer);
+        console.log("deal cards to player #" + stringIndexCurrentPlayer + " - 2) ERR - status code: " + jqXHR.status);
+      },
+      statusCode: getStatusCodesActionsForDealHandService(nameCurrentService, argsCurrentService, mapCustomServiceStatus),
+      complete: function (jqXHR, textStatus) {
+        currentStatusCode =jqXHR.status;
+        console.log("deal cards to player #" + stringIndexCurrentPlayer + " - 3) COMPLETE - status code: " + jqXHR.status);
+      }
+    });
+
+    console.log("deal cards to player #" + stringIndexCurrentPlayer + " - 4) End");
+
+  }
+}
+
+// Function to deal the cards from the deck to all players.
+function dealAllCards() {
+  // Empty the current hands of all players
+  listHands = [];
+  // Re-initialize the general global variables
+  initGeneralVars();
+  // Empty the table cards of all the players
+  emptyAllTableCards();
+  //Empty all the current messages
+  emptyMessages();
+  // Deal cards from deck to all players
+  dealAllCardsAJAX();
+  // Set the final status code of the current service
+  // according to status codes obtainerd from all the service callings
+  setFinalStatusCodeService();
+  // Print all the hands of all players on the table
+  // according to the value of codeFinalCurrentService
+  if (codeFinalCurrentService == "OK") {
+    paintAllTableCards();
+  }
   // Show message of the service
   showMessage();
 }
@@ -84,7 +159,7 @@ function shuffleDeck() {
 function dealCardsAJAXForPlayer(idxPlayer) {
   // Declare a local variable for response state code of service to call.
   // Initialize this variable to 0.
-  var respStatCode = 0;
+  var respStatCode = 0
   // Read the token of the deck
   var tokenDeck = $("#hidDeckId").val();
   // Set the amount of cards to deal to each player
@@ -99,12 +174,10 @@ function dealCardsAJAXForPlayer(idxPlayer) {
   $.ajax({
     type: "get",
     url: uri,
-    async: false,
     dataType: "json",
     success: function (data, textStatus, jqXHR) {
       responseData = data;
       respStatCode = jqXHR.status;
-      console.log(respStatCode);
       var currentHand = {};
       currentHand["index"] = idxPlayer;
       currentHand["amountCards"] = amountCardsByHand;
@@ -113,43 +186,9 @@ function dealCardsAJAXForPlayer(idxPlayer) {
     },
     error: function (jqXHR, textStatus, errorThrown ) {
       respStatCode = jqXHR.status;
-      console.log(respStatCode);
     },
     statusCode: getStatusCodesActionsForDealHandService()
   });
   // Return the status code of this operation
   return respStatCode;
-}
-
-// Function to deal the cards from the deck to all players.
-function dealAllCards() {
-  // Re-initialize the general global variables
-  initGeneralVars();
-  // Empty the table cards of all the players
-  emptyAllTableCards();
-  //Empty all the current messages
-  emptyMessages();
-  // Set the general global variable relative to
-  // the current service
-  nameCurrentService = "Deal Cards"
-  // Set the general global variable relative to
-  // the current call of this service
-  argsCurrentService = "Player N." + idxPlayer1;
-  // Deal cards from deck to Player #1
-  var statusCode1 = dealCardsAJAXForPlayer(idxPlayer1);
-  // Set the general global variable relative to
-  // the current call of this service
-  argsCurrentService = "Player N." + idxPlayer2;
-  // Deal cards from deck to Player #2
-  var statusCode2 = dealCardsAJAXForPlayer(idxPlayer2);
-  // Set the final status code of the current service
-  // according to status codes obtainerd from all the service callings
-  setFinalStatusCodeService();
-  // Print all the hands of all players on the table
-  // according to the value of codeFinalCurrentService
-  if (codeFinalCurrentService == "OK") {
-    paintAllTableCards();
-  }
-  // Show message of the service
-  showMessage();
 }
