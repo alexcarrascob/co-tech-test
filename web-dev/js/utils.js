@@ -2,6 +2,17 @@
 // SCRIPT WITH UTILITY FUNCTIONS USED IN THIS PROGRAM
 // ========================================================================
 
+// Function to log the variable matrixMessages with the response
+// from the current services calls on the web console.
+function logMatrixMessages() {
+  console.log("ini logMatrixMessages");
+  console.log("size matrixMessages = " + matrixMessages.length.toString());
+  for (var i = 0; i < matrixMessages.length; i++) {
+    console.log("matrixMessages[" + i + "]=|" + matrixMessages[i].statusCode + "|" + matrixMessages[i].source + "|" + matrixMessages[i].description+"|");
+  }
+  console.log("fin logMatrixMessages");
+}
+
 // Function to convert a number to a string, prefixing a zero
 // if the number is less than 10.
 function convertNumberToString(number) {
@@ -14,7 +25,7 @@ function convertNumberToString(number) {
   return numString;
 }
 
-// Function to initialize the general global variables to their default values
+// Function to initialize the general global variables to their default values.
 function initGeneralVars() {
   codeFinalCurrentService = "";
 }
@@ -200,13 +211,10 @@ function getStatusCodesActionsForDealHandService(nameCurrentService, argsCurrent
 // based on a collection of status codes obtained
 // from multiple calls to this service.
 function generateTypeMessage() {
-  console.log("aca voy");
   codeMessage = "OK";
   typeMessage = "Success";
   classesMessage = "messageOK";
-  console.log(matrixMessages.length);
   for (var i = 0; i < matrixMessages.length; i++) {
-    console.log(matrixMessages[i].statusCode + " - " + matrixMessages[i].source + " - " + matrixMessages[i].description);
     if (matrixMessages[i].statusCode != 200) {
       codeMessage = "ERR";
       typeMessage = "Error";
@@ -219,7 +227,6 @@ function generateTypeMessage() {
 function generateFullMessage() {
   fullMessage = typeMessage + "<br><br>";
   for (var i = 0; i < matrixMessages.length; i++) {
-    console.log(matrixMessages[i].statusCode + " - " + matrixMessages[i].source + " - " + matrixMessages[i].description);
     fullMessage += matrixMessages[i].source + " : " + matrixMessages[i].description + "<br>";
   }
 }
@@ -235,21 +242,25 @@ function showMessage() {
   $("#blkMessages").html(fullMessage);
 }
 
+// Function to set the final status code service
+// according to the calls made to it.
 function setFinalStatusCodeService() {
   codeFinalCurrentService = "OK";
   for (var i = 0; i < matrixMessages.length; i++) {
-    if (matrixMessages[i]["statusCode"] != 200) {
+    if (matrixMessages[i].statusCode != 200) {
       codeFinalCurrentService = "ERR";
     }
   }
 }
 
+// Funtion to paint the table cards of all players.
 function paintAllTableCards() {
   for (var i = 0; i < listHands.length; i++) {
     paintTableCardsForPlayer(listHands[i].index, listHands[i].amountCards, listHands[i].cards);
   }
 }
 
+// Function to paint the table cards of a specific player.
 function paintTableCardsForPlayer(idxPlayer, amountCards, dataCards) {
   var htmlCards = "";
   for (var i = 0; i < amountCards; i++) {
