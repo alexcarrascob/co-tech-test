@@ -22,7 +22,52 @@ function convertNumberToString(number) {
   } else {
     numString = number.toString();
   }
+  // console.log("numString=" + numString);
   return numString;
+}
+
+function convertSuiteFromJsToCss(suiteJs) {
+  var suiteCss = "";
+  switch (suiteJs) {
+    case "diamonds":
+      suiteCss = "diams";
+      break;
+    case "hearts":
+      suiteCss = "hearts";
+      break;
+    case "clubs":
+      suiteCss = "clubs";
+      break;
+    case "spades":
+      suiteCss = "spades";
+      break;
+    default:
+      suiteCss = "other";
+      break;
+  }
+  return suiteCss;
+}
+
+function convertSuiteFromCssToJs(suiteCss) {
+  var suiteJs = "";
+  switch (suiteCss) {
+    case "diams":
+      suiteJs = "diamonds";
+      break;
+    case "hearts":
+      suiteJs = "hearts";
+      break;
+    case "clubs":
+      suiteJs = "clubs";
+      break;
+    case "spades":
+      suiteJs = "spades";
+      break;
+    default:
+      suiteJs = "other";
+      break;
+  }
+  return suiteJs;
 }
 
 // Function to initialize the general global variables to their default values.
@@ -225,9 +270,9 @@ function generateTypeMessage() {
 
 // Function to generate the full message to display in the view.
 function generateFullMessage() {
-  fullMessage = typeMessage + "<br><br>";
+  fullMessage = "<span class='headerMessage'>" + typeMessage + "</span><br><br>";
   for (var i = 0; i < matrixMessages.length; i++) {
-    fullMessage += matrixMessages[i].source + " : " + matrixMessages[i].description + "<br>";
+    fullMessage += matrixMessages[i].source + " : " + matrixMessages[i].description + "<br><br>";
   }
 }
 
@@ -262,18 +307,24 @@ function paintAllTableCards() {
 
 // Function to paint the table cards of a specific player.
 function paintTableCardsForPlayer(idxPlayer, amountCards, dataCards) {
-  var htmlCards = "";
+  var html = "";
+  var suiteCss = "";
+  var number = "";
+  var suit = "";
+  html += "<ul class='table'>";
   for (var i = 0; i < amountCards; i++) {
-    var elem = "";
-    var number = dataCards[i].number;
-    var suit = dataCards[i].suit;
-    elem = number + "-" + suit;
-    htmlCards += elem;
-    if (i < amountCards - 1) {
-      htmlCards += "<br>";
-    }
+    number = dataCards[i].number;
+    suit = dataCards[i].suit;
+    suiteCss = convertSuiteFromJsToCss(suit);
+    html += "<li>";
+    html += "<span class='card rank-" + number.toLowerCase() + " " + suiteCss + "'>";
+    html += "<span class='rank'>" + number + "</span>";
+    html += "<span class='suit'>&" + suiteCss + ";</span>";
+    html += "</span>";
+    html += "</li>";
   }
-  $("#blkTableCardsP" + idxPlayer).html(htmlCards);
+  html += "</ul>";
+  $("#blkTableCardsP" + idxPlayer).html(html);
 }
 
 function addMessage(statusCode, nameCurrentService, argsCurrentService, mapCustomServiceStatus) {

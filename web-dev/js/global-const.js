@@ -8,6 +8,7 @@ mapServiceStatus["200"] = "OK";
 mapServiceStatus["405"] = "Method Not Allowed";
 mapServiceStatus["500"] = "An internal server error occurred.";
 mapServiceStatus["502"] = "Bad Getaway.";
+mapServiceStatus["0"] = "Unknown Error.";
 
 // Constants relatives to the game
 var totalPlayers = 2;

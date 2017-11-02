@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>CO Web Development</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/playing-cards/cards.css" media="screen" />
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/jquery/jquery-3.2.1.js"></script>
     <script src="js/global-const.js" charset="utf-8"></script>
@@ -14,7 +15,7 @@
 
   <body>
     <header id="headView">
-      <h1>CO Web Development</h1>
+      <div>Poker Game</div>
     </header>
 
     <div id="containerView">
@@ -30,9 +31,11 @@
 
       <section id="secHands">
         <h3>Players Hands</h3>
-        <div id="blkTableCardsP1" class="tableCards"></div>
+        <div class="headPlayer01">Player #01</div>
+        <div id="blkTableCardsP1" class="playingCards tableCards"></div>
         <div id="blkResultPoker"></div>
-        <div id="blkTableCardsP2" class="tableCards"></div>
+        <div id="blkTableCardsP2" class="playingCards tableCards"></div>
+        <div class="headPlayer02">Player #02</div>
       </section>
 
       <section id="secMessages">
@@ -42,7 +45,7 @@
 
     <footer id="footView">
       <div id="blkFooter">
-        Author: Alex Ignacio Carrasco Barras
+        Created by AICB.
       </div>
     </footer>
   </body>
