@@ -275,3 +275,24 @@ function paintTableCardsForPlayer(idxPlayer, amountCards, dataCards) {
   }
   $("#blkTableCardsP" + idxPlayer).html(htmlCards);
 }
+
+function addMessage(statusCode, nameCurrentService, argsCurrentService, mapCustomServiceStatus) {
+  var scMsj = statusCode;
+  var sourceMsj = "";
+  if (argsCurrentService == "") {
+    sourceMsj = nameCurrentService;
+  } else {
+    sourceMsj = nameCurrentService + " / " + argsCurrentService;
+  }
+  var descMsj = "";
+  if (scMsj.toString() in mapCustomServiceStatus) {
+    descMsj = mapCustomServiceStatus[scMsj.toString()]
+  } else {
+    descMsj = mapServiceStatus[scMsj.toString()];
+  }
+  var objMsj = [];
+  objMsj["statusCode"] = scMsj;
+  objMsj["source"] = sourceMsj;
+  objMsj["description"] = descMsj;
+  matrixMessages.push(objMsj);
+}

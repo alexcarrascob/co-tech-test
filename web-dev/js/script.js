@@ -22,35 +22,43 @@ $(function () {
 
 // Function AJAX to shuffle the deck.
 function shuffleDeckAJAX() {
-  // Declare a local variable for response state code of service to call.
-  // Initialize this variable to 0.
-  var respStatCode = 0;
   // Set uri for Dealer Service
   var uri = "https://services.comparaonline.com/dealer/deck";
   // Declare and set initially some useful local response variables
   // for the Dealer service
   var responseData = null;
+  var currentStatusCode = 0;
   var nameCurrentService = "Shuffle Deck";
   var argsCurrentService = "";
   var mapCustomServiceStatus = {};
   mapCustomServiceStatus["200"] = "Deck shuffled successful.";
-  var listStatusCodes = getStatusCodesActionsForShuffleDeckService(nameCurrentService, argsCurrentService, mapCustomServiceStatus);
   // Call to the POST method of the Dealer service to shuffle the deck
   $.ajax({
     type: "post",
     url: uri,
+    async: false,
+    beforeSend: function (jqXHR) {
+      console.log("shuffleDeckAJAX->beforeSend");
+      console.log("statusCode=" + jqXHR.status);
+      currentStatusCode =jqXHR.status;
+    },
     success: function (data, textStatus, jqXHR) {
+      console.log("shuffleDeckAJAX->success");
+      console.log("statusCode=" + jqXHR.status);
       responseData = data
-      respStatCode = jqXHR.status;
+      currentStatusCode = jqXHR.status;
       $("#hidDeckId").val(responseData);
       $("#btnDealCards").prop("disabled", false);
+      addMessage(currentStatusCode, nameCurrentService, argsCurrentService, mapCustomServiceStatus);
     },
-    error: function (jqXHR, textStatus, errorThrown ) {
-      respStatCode = jqXHR.status;
+    error: function (jqXHR, textStatus, errorThrown) {
+      console.log("shuffleDeckAJAX->error");
+      console.log("statusCode=" + jqXHR.status);
+      currentStatusCode = jqXHR.status;
       $("#hidDeckId").val("");
       $("#btnDealCards").prop("disabled", true);
-    },
-    statusCode: listStatusCodes
+      addMessage(currentStatusCode, nameCurrentService, argsCurrentService, mapCustomServiceStatus);
+    }
   });
 }
 
@@ -71,6 +79,8 @@ function shuffleDeck() {
   setFinalStatusCodeService();
   // Show message of the service
   showMessage();
+
+  logMatrixMessages();
 }
 
 function dealAllCardsAJAX() {
@@ -90,52 +100,39 @@ function dealAllCardsAJAX() {
     mapCustomServiceStatus["200"] = "Hands dealt successful.";
     mapCustomServiceStatus["404"] = "Deck isn't found. It doesn’t exist or has expired.";
     mapCustomServiceStatus["405"] = "There aren’t enough cards in the deck to deal the amount requested.";
-    var listStatusCodes = getStatusCodesActionsForDealHandService(nameCurrentService, argsCurrentService, mapCustomServiceStatus);
-
-    console.log("deal cards to player #" + stringIndex + " - 1) Ini - Uri: " + uri);
-
     // Call to the GET method of the Dealer service to deal cards
     // from the deck to all the players
     $.ajax({
       type: "get",
       url: uri,
-      // async: false,
       dataType: "json",
+      async: false,
       beforeSend: function (jqXHR) {
+        console.log("dealAllCardsAJAX->beforeSend");
+        console.log("statusCode=" + jqXHR.status);
         currentStatusCode =jqXHR.status;
       },
       success: function (data, textStatus, jqXHR) {
+        console.log("dealAllCardsAJAX->success");
+        console.log("statusCode=" + jqXHR.status);
         currentStatusCode =jqXHR.status;
         argsCurrentService = "Player #" + convertNumberToString(stringIndex);
-
-        console.log("deal cards to player #" + stringIndex + " - 2) OK - status code: " + jqXHR.status);
-        console.log("argsCurrentService = " + argsCurrentService);
-
         responseData = data;
         var currentHand = {};
-        currentHand["index"] = 1;
+        currentHand["index"] = idx;
         currentHand["amountCards"] = amountCardsByHand;
         currentHand["cards"] = responseData;
         listHands.push(currentHand);
+        addMessage(currentStatusCode, nameCurrentService, argsCurrentService, mapCustomServiceStatus);
       },
       error: function (jqXHR, textStatus, errorThrown) {
+        console.log("dealAllCardsAJAX->error");
+        console.log("statusCode=" + jqXHR.status);
         currentStatusCode =jqXHR.status;
-        argsCurrentService = "Player N" + convertNumberToString(stringIndex);
-
-        console.log("deal cards to player #" + stringIndex + " - 2) ERR - status code: " + jqXHR.status);
-
-      },
-      statusCode: listStatusCodes,
-      complete: function (jqXHR, textStatus) {
-        currentStatusCode =jqXHR.status;
-
-        console.log("deal cards to player #" + stringIndex + " - 3) COMPLETE - status code: " + jqXHR.status);
-
+        argsCurrentService = "Player #" + convertNumberToString(stringIndex);
+        addMessage(currentStatusCode, nameCurrentService, argsCurrentService, mapCustomServiceStatus);
       }
     });
-
-    console.log("deal cards to player #" + stringIndex + " - 4) End");
-
   }
 }
 
@@ -151,9 +148,6 @@ function dealAllCards() {
   emptyMessages();
   // Deal cards from deck to all players
   dealAllCardsAJAX();
-
-  logMatrixMessages();
-
   // Set the final status code of the current service
   // according to status codes obtainerd from all the service callings
   setFinalStatusCodeService();
@@ -164,4 +158,6 @@ function dealAllCards() {
   }
   // Show message of the service
   showMessage();
+
+  logMatrixMessages();
 }
