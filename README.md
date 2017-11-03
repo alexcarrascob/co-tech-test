@@ -13,6 +13,6 @@ INSTALLATION INSTRUCTIONS:
 
 2) Go to the local project folder and open the file /web-dev/index.html with any web browser like Internet Explorer, Google Chrome, Mozilla Firefox, Opera, Safari or any other you like.
 
-3) Use the program.
+3) Use the program for the purposes you need.
 
 ==============================================================================
