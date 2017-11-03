@@ -1,6 +1,11 @@
-// // ========================================================================
+// ========================================================================
 // SCRIPT WITH GLOBAL CONSTANTS USED IN THIS PROGRAM
 // ========================================================================
+
+// Constants relative to the Web view
+// var imgLoading =
+// "<img id='imgLoading' alt='Loading...' src='/img/loading.gif' width='100' height='100' align='center' />";
+// var spnTxtLoading = "<span id='spnTxtLoading'>Loading...</span>";
 
 // Constants relative to the services
 var mapServiceStatus = {};

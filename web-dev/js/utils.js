@@ -60,10 +60,7 @@ function convertSuiteFromCssToJs(suiteCss) {
 // Function to initialize the general global variables to their default values.
 function initGeneralVars() {
   codeFinalCurrentService = "";
-  if (timerDeck != null) {
-    clearInterval(timerDeck);
-    timerDeck = null;
-  }
+  stopTimer();
 }
 
 // Function to empty the message components in the view.
@@ -373,7 +370,7 @@ function timingDeck(startDateTime, milliSecsDuration, milliSecInterval) {
   seconds = getSecondsFromIntervalTime(distance);
   secondsString = convertNumberToString(seconds);
   // Show the current time difference in the view
-  $("#blkTiming").css("color", "#ffffff")
+  $("#blkTiming").css("color", "#ffffff");
   $("#blkTiming").html("Deck duration: " + minutesString + " mins, " + secondsString + " secs");
   // Initiate the deck timer with given input parameters and calculated variables
   timerDeck = setInterval(function() {
@@ -388,14 +385,50 @@ function timingDeck(startDateTime, milliSecsDuration, milliSecInterval) {
     seconds = getSecondsFromIntervalTime(distance);
     secondsString = convertNumberToString(seconds);
     // Show the current time difference in the view
-    $("#blkTiming").css("color", "#ffffff")
+    $("#blkTiming").css("color", "#ffffff");
     $("#blkTiming").html("Deck duration: " + minutesString + " mins, " + secondsString + " secs");
     // If it has reached the end of the duration time,
     // then stop the timer and show in the view that this time has expired.
     if (distance < 0) {
       clearInterval(timerDeck);
-      $("#blkTiming").css("color", "#ff0000")
+      timerDeck = 0;
+      $("#blkTiming").css("color", "#ff0000");
       $("#blkTiming").html("Expired time for current deck.");
     }
   }, milliSecInterval);
+}
+
+function startTimer() {
+  $("#blkTiming").show();
+  clearInterval(timerDeck);
+  timerDeck = 0;
+  // Set datetime at which the current deck was generated to now
+  var startDateTimeDeck = new Date();
+  // Set duration of current deck in milliseconds: 5 minutes
+  var milliSecsDurationDeck = 300000;
+  // Set duration of interval timer in milliseconds: 1 minute
+  var milliSecsIntervalTimer = 1000;
+  // Execute timer for current deck
+  timerDeck = timingDeck(startDateTimeDeck, milliSecsDurationDeck, milliSecsIntervalTimer);
+}
+
+function stopTimer() {
+  $("#blkTiming").hide();
+  clearInterval(timerDeck);
+  timerDeck = 0;
+  $("#blkTiming").css("color", "#ffffff");
+  $("#blkTiming").html("");
+}
+
+function startloading() {
+  var imgLoading = "<img id='imgLoading' alt='Loading...' src='img/loading.gif' width='50' height='50' /><br>";
+  var spnTxtLoading = "<span style='font-weight: bold; color: #ffffff;' id='spnTxtLoading'>Loading...</span>";
+  var htmlLoading = imgLoading + spnTxtLoading;
+  $("#blkLoading").html(htmlLoading);
+  $("#blkLoading").show();
+}
+
+function stopLoading() {
+  $("#blkLoading").html("");
+  $("#blkLoading").hide();
 }

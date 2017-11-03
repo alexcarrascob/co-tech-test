@@ -9,17 +9,19 @@ var listHands;
 // Execute when the view loads.
 $(function () {
   // Set variable for deck timer initially to null
-  timerDeck = null;
+  timerDeck = 0;
   // Empty the current hands of all players
   listHands = [];
   // Re-initialize the general global variables
   initGeneralVars();
   // Empty the table cards of all the players
   emptyAllTableCards();
-  //Empty all the current messages
+  // Empty all the current messages
   emptyMessages();
   // Disable the button for Deal Cards to players.
   $("#btnDealCards").prop("disabled", true);
+  // Hiding initially the block for loading
+  stopLoading();
 });
 
 // Function AJAX to shuffle the deck.
@@ -42,23 +44,22 @@ function shuffleDeckAJAX() {
     async: false,
     beforeSend: function (jqXHR) {
       currentStatusCode =jqXHR.status;
+      // Start animation of the loading block
+      startloading();
     },
     success: function (data, textStatus, jqXHR) {
-      responseData = data
+      // Stop animation of the loading block
+      stopLoading();
       currentStatusCode = jqXHR.status;
+      responseData = data;
       $("#hidDeckId").val(responseData);
       $("#btnDealCards").prop("disabled", false);
-      // Set datetime at which the current deck was generated to now
-      var startDateTimeDeck = new Date();
-      // Set duration of current deck in milliseconds: 5 minutes
-      var milliSecsDurationDeck = 300000;
-      // Set duration of interval timer in milliseconds: 1 minute
-      var milliSecsIntervalTimer = 1000;
-      // Execute timer for current deck
-      timingDeck(startDateTimeDeck, milliSecsDurationDeck, milliSecsIntervalTimer);
+      startTimer();
       addMessage(currentStatusCode, nameCurrentService, argsCurrentService, mapActions);
     },
     error: function (jqXHR, textStatus, errorThrown) {
+      // Stop animation of the loading block
+      stopLoading();
       currentStatusCode = jqXHR.status;
       $("#hidDeckId").val("");
       $("#btnDealCards").prop("disabled", true);
@@ -69,6 +70,7 @@ function shuffleDeckAJAX() {
 
 // Function to shuffle the deck.
 function shuffleDeck() {
+  stopTimer();
   // Empty the current hands of all players
   listHands = [];
   // Re-initialize the general global variables
@@ -114,11 +116,15 @@ function dealAllCardsAJAX() {
       async: false,
       beforeSend: function (jqXHR) {
         currentStatusCode =jqXHR.status;
+        // Start animation of the loading block
+        startloading();
       },
       success: function (data, textStatus, jqXHR) {
+        // Stop animation of the loading block
+        stopLoading();
         currentStatusCode =jqXHR.status;
-        argsCurrentService = "Player #" + stringIndex;
         responseData = data;
+        argsCurrentService = "Player #" + stringIndex;
         var currentHand = {};
         currentHand["index"] = idx;
         currentHand["amountCards"] = amountCardsByHand;
@@ -127,6 +133,8 @@ function dealAllCardsAJAX() {
         addMessage(currentStatusCode, nameCurrentService, argsCurrentService, mapActions);
       },
       error: function (jqXHR, textStatus, errorThrown) {
+        // Stop animation of the loading block
+        stopLoading();
         currentStatusCode =jqXHR.status;
         if (currentStatusCode == 405) {
           $("#btnDealCards").prop("disabled", true);
