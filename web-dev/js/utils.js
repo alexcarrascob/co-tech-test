@@ -13,19 +13,6 @@ function logMatrixMessages() {
   console.log("fin logMatrixMessages");
 }
 
-// Function to convert a number to a string, prefixing a zero
-// if the number is less than 10.
-function convertNumberToString(number) {
-  var numString = "";
-  if (number < 10) {
-    numString = "0" + number.toString();
-  } else {
-    numString = number.toString();
-  }
-  // console.log("numString=" + numString);
-  return numString;
-}
-
 function convertSuiteFromJsToCss(suiteJs) {
   var suiteCss = "";
   switch (suiteJs) {
@@ -256,15 +243,14 @@ function getStatusCodesActionsForDealHandService(nameCurrentService, argsCurrent
 // based on a collection of status codes obtained
 // from multiple calls to this service.
 function generateTypeMessage() {
-  codeMessage = "OK";
-  typeMessage = "Success";
-  classesMessage = "messageOK";
-  for (var i = 0; i < matrixMessages.length; i++) {
-    if (matrixMessages[i].statusCode != 200) {
-      codeMessage = "ERR";
-      typeMessage = "Error";
-      classesMessage = "messageError";
-    }
+  if (codeFinalCurrentService == "OK") {
+    codeMessage = "OK";
+    typeMessage = "Success";
+    classesMessage = "messageOK";
+  } else {
+    codeMessage = "ERR";
+    typeMessage = "Error";
+    classesMessage = "messageError";
   }
 }
 
@@ -298,10 +284,13 @@ function setFinalStatusCodeService() {
   }
 }
 
-// Funtion to paint the table cards of all players.
+// Funtion to paint the table cards of all players
+// according to the value of codeFinalCurrentService
 function paintAllTableCards() {
-  for (var i = 0; i < listHands.length; i++) {
-    paintTableCardsForPlayer(listHands[i].index, listHands[i].amountCards, listHands[i].cards);
+  if (codeFinalCurrentService == "OK") {
+    for (var i = 0; i < listHands.length; i++) {
+      paintTableCardsForPlayer(listHands[i].index, listHands[i].amountCards, listHands[i].cards);
+    }
   }
 }
 
@@ -346,4 +335,24 @@ function addMessage(statusCode, nameCurrentService, argsCurrentService, mapCusto
   objMsj["source"] = sourceMsj;
   objMsj["description"] = descMsj;
   matrixMessages.push(objMsj);
+}
+
+function timingDeck() {
+  var dateNow = new Date();
+  var dateDurationDeck = new Date(dateNow.getTime());
+  var distance = 0;
+  dateDurationDeck.setMinutes(dateDurationDeck.getMinutes() + 5)
+  var x = setInterval(function() {
+    dateNow = new Date();
+    distance = dateDurationDeck - dateNow;
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    minutes = convertNumberToString(minutes);
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    seconds = convertNumberToString(seconds);
+    document.getElementById("blkTiming").innerHTML = minutes + "m " + seconds + "s ";
+    if (distance < 0) {
+      clearInternval(x);
+      document.getElementById("blkTiming").innerHTML = "Expired time for the current deck.";
+    }
+  }, 1000);
 }

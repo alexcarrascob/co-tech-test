@@ -74,7 +74,6 @@ function shuffleDeck() {
   setFinalStatusCodeService();
   // Show message of the service
   showMessage();
-
   // logMatrixMessages();
 }
 
@@ -145,12 +144,8 @@ function dealAllCards() {
   // according to status codes obtainerd from all the service callings
   setFinalStatusCodeService();
   // Print all the hands of all players on the table
-  // according to the value of codeFinalCurrentService
-  if (codeFinalCurrentService == "OK") {
-    paintAllTableCards();
-  }
+  paintAllTableCards();
   // Show message of the service
   showMessage();
-
   // logMatrixMessages();
 }
