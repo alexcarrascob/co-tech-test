@@ -4,7 +4,7 @@
 
 // General variables used for this program
 var codeFinalCurrentService;
-var timerDeck;
+var timerDeckID;
 
 // Variables relative to message to show in view.
 var codeMessage;

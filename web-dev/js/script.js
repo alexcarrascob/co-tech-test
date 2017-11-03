@@ -6,10 +6,10 @@
 // of all players in the current game
 var listHands;
 
+
+
 // Execute when the view loads.
 $(function () {
-  // Set variable for deck timer initially to null
-  timerDeck = 0;
   // Empty the current hands of all players
   listHands = [];
   // Re-initialize the general global variables
@@ -26,6 +26,8 @@ $(function () {
 
 // Function AJAX to shuffle the deck.
 function shuffleDeckAJAX() {
+  // Stop the current deck timer
+  // stopTimer();
   // Set uri for Dealer Service
   var uri = "https://services.comparaonline.com/dealer/deck";
   // Declare and set initially some useful local response variables
@@ -70,7 +72,7 @@ function shuffleDeckAJAX() {
 
 // Function to shuffle the deck.
 function shuffleDeck() {
-  stopTimer();
+
   // Empty the current hands of all players
   listHands = [];
   // Re-initialize the general global variables

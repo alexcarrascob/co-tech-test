@@ -2,6 +2,8 @@
 // SCRIPT WITH UTILITY FUNCTIONS USED IN THIS PROGRAM
 // ========================================================================
 
+
+
 // Function to log the variable matrixMessages with the response
 // from the current services calls on the web console.
 function logMatrixMessages() {
@@ -60,7 +62,6 @@ function convertSuiteFromCssToJs(suiteCss) {
 // Function to initialize the general global variables to their default values.
 function initGeneralVars() {
   codeFinalCurrentService = "";
-  stopTimer();
 }
 
 // Function to empty the message components in the view.
@@ -355,14 +356,18 @@ function timingDeck(startDateTime, milliSecsDuration, milliSecInterval) {
   var minutesString = "";
   var seconds = 0;
   var secondsString = "";
+  var dateStart = null;
+  var dateEnd = null;
+  var distance = 0;
   // Get the current datetime as start datetime
-  var dateStart = new Date(startDateTime.getTime());
+  // dateStart = new Date(startDateTime.getTime());
   // Set final datetime to the duration time of the current deck
   // adding the number of milliseconds given in the input parameter milliSecsDuration
-  var dateEnd = new Date(dateStart.getTime());
+  dateEnd = new Date(startDateTime);
   dateEnd.setMilliseconds(dateEnd.getMilliseconds() + milliSecsDuration);
   // Calculate the time difference between start and end datetime
-  var distance = dateEnd - dateStart;
+  // distance = dateEnd - dateStart;
+  distance = milliSecsDuration;
   // Get the minutes of the calculated time distance
   minutes = getMinutesFromIntervalTime(distance);
   minutesString = convertNumberToString(minutes);
@@ -373,7 +378,8 @@ function timingDeck(startDateTime, milliSecsDuration, milliSecInterval) {
   $("#blkTiming").css("color", "#ffffff");
   $("#blkTiming").html("Deck duration: " + minutesString + " mins, " + secondsString + " secs");
   // Initiate the deck timer with given input parameters and calculated variables
-  timerDeck = setInterval(function() {
+  console.log("start deck timer");
+  timerDeckID = setInterval(function() {
     // Set start datetime to now
     dateStart = new Date();
     // Calculate the time difference between start and end datetime
@@ -390,45 +396,87 @@ function timingDeck(startDateTime, milliSecsDuration, milliSecInterval) {
     // If it has reached the end of the duration time,
     // then stop the timer and show in the view that this time has expired.
     if (distance < 0) {
-      clearInterval(timerDeck);
-      timerDeck = 0;
+      clearInterval(timerDeckID);
       $("#blkTiming").css("color", "#ff0000");
       $("#blkTiming").html("Expired time for current deck.");
     }
   }, milliSecInterval);
 }
 
+function countDown(startDateTime, milliSecsDuration, milliSecInterval){
+  var dias=0;
+  var horas=0;
+  var minutos=0;
+  var segundos=0;
+
+  var final=new Date(startDateTime);
+  final.setMilliseconds(final.getMilliseconds() + milliSecsDuration);
+  var inicio=new Date(startDateTime);
+
+  if (final > inicio){
+    var diferencia=(final.getTime()-inicio.getTime())/1000;
+    dias=Math.floor(diferencia/86400);
+    diferencia=diferencia-(86400*dias);
+    horas=Math.floor(diferencia/3600);
+    diferencia=diferencia-(3600*horas);
+    minutos=Math.floor(diferencia/60);
+    diferencia=diferencia-(60*minutos);
+    segundos=Math.floor(diferencia);
+    // Show the current time difference in the view
+    minutesString = convertNumberToString(minutos);
+    secondsString = convertNumberToString(segundos);
+    $("#blkTiming").css("color", "#ffffff");
+    $("#blkTiming").html("Deck duration: " + minutesString + " mins, " + secondsString + " secs");
+    if (dias > 0 || horas > 0 || minutos > 0 || segundos > 0){
+      timerDeckID = setTimeout("countDown('" + startDateTime + "'," + (milliSecsDuration - milliSecInterval) + "," + milliSecInterval + ")", milliSecInterval);
+    }
+  }
+  else {
+    stopTimer();
+  }
+}
+
 function startTimer() {
+  // Show the block for current deck timing
   $("#blkTiming").show();
-  clearInterval(timerDeck);
-  timerDeck = 0;
   // Set datetime at which the current deck was generated to now
   var startDateTimeDeck = new Date();
   // Set duration of current deck in milliseconds: 5 minutes
   var milliSecsDurationDeck = 300000;
   // Set duration of interval timer in milliseconds: 1 minute
   var milliSecsIntervalTimer = 1000;
-  // Execute timer for current deck
-  timerDeck = timingDeck(startDateTimeDeck, milliSecsDurationDeck, milliSecsIntervalTimer);
+  // Start the current deck timer
+  // timerDeckID = timingDeck(startDateTimeDeck, milliSecsDurationDeck, milliSecsIntervalTimer);
+  countDown(startDateTimeDeck, milliSecsDurationDeck, milliSecsIntervalTimer);
 }
 
 function stopTimer() {
+  // Hide the block for current deck timing
   $("#blkTiming").hide();
-  clearInterval(timerDeck);
-  timerDeck = 0;
+  // Stop the current deck timer
+  console.log("stop deck timer");
+  clearInterval(timerDeckID);
+  // Set default style of timing block
   $("#blkTiming").css("color", "#ffffff");
+  // Empty content of timing block
   $("#blkTiming").html("");
 }
 
 function startloading() {
-  var imgLoading = "<img id='imgLoading' alt='Loading...' src='img/loading.gif' width='50' height='50' /><br>";
+  // Set HTML content for loading block
+  var imgLoading = "<img id='imgLoading' alt='Loading...' src='img/loading.gif' width='50' height='50' />";
+  var breakLine = "<br>";
   var spnTxtLoading = "<span style='font-weight: bold; color: #ffffff;' id='spnTxtLoading'>Loading...</span>";
-  var htmlLoading = imgLoading + spnTxtLoading;
+  var htmlLoading = imgLoading + breakLine + spnTxtLoading;
+  // Load this content in loading block
   $("#blkLoading").html(htmlLoading);
+  // Show the loading block
   $("#blkLoading").show();
 }
 
 function stopLoading() {
+  // Empty content of loading block
   $("#blkLoading").html("");
+  // Hide the loading block
   $("#blkLoading").hide();
 }
