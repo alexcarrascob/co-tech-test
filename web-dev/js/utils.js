@@ -60,6 +60,10 @@ function convertSuiteFromCssToJs(suiteCss) {
 // Function to initialize the general global variables to their default values.
 function initGeneralVars() {
   codeFinalCurrentService = "";
+  if (timerDeck != null) {
+    clearInterval(timerDeck);
+    timerDeck = null;
+  }
 }
 
 // Function to empty the message components in the view.
@@ -258,7 +262,7 @@ function generateTypeMessage() {
 function generateFullMessage() {
   fullMessage = "<span class='headerMessage'>" + typeMessage + "</span><br><br>";
   for (var i = 0; i < matrixMessages.length; i++) {
-    fullMessage += matrixMessages[i].source + " : " + matrixMessages[i].description + "<br><br>";
+    fullMessage += matrixMessages[i].source + " : " + matrixMessages[i].description + "<br>";
   }
 }
 
@@ -337,22 +341,61 @@ function addMessage(statusCode, nameCurrentService, argsCurrentService, mapCusto
   matrixMessages.push(objMsj);
 }
 
-function timingDeck() {
-  var dateNow = new Date();
-  var dateDurationDeck = new Date(dateNow.getTime());
-  var distance = 0;
-  dateDurationDeck.setMinutes(dateDurationDeck.getMinutes() + 5)
-  var x = setInterval(function() {
-    dateNow = new Date();
-    distance = dateDurationDeck - dateNow;
-    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    minutes = convertNumberToString(minutes);
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    seconds = convertNumberToString(seconds);
-    document.getElementById("blkTiming").innerHTML = minutes + "m " + seconds + "s ";
+function getMinutesFromIntervalTime(i) {
+  var min = Math.floor((i % (1000 * 60 * 60)) / (1000 * 60));
+  return min;
+}
+
+function getSecondsFromIntervalTime(i) {
+  var sec = Math.floor((i % (1000 * 60)) / 1000);
+  return sec;
+}
+
+// Function to execute timer for current deck
+function timingDeck(startDateTime, milliSecsDuration, milliSecInterval) {
+  // Set local variables of the function
+  var minutes = 0;
+  var minutesString = "";
+  var seconds = 0;
+  var secondsString = "";
+  // Get the current datetime as start datetime
+  var dateStart = new Date(startDateTime.getTime());
+  // Set final datetime to the duration time of the current deck
+  // adding the number of milliseconds given in the input parameter milliSecsDuration
+  var dateEnd = new Date(dateStart.getTime());
+  dateEnd.setMilliseconds(dateEnd.getMilliseconds() + milliSecsDuration);
+  // Calculate the time difference between start and end datetime
+  var distance = dateEnd - dateStart;
+  // Get the minutes of the calculated time distance
+  minutes = getMinutesFromIntervalTime(distance);
+  minutesString = convertNumberToString(minutes);
+  // Get the seconds of the calculated time distance
+  seconds = getSecondsFromIntervalTime(distance);
+  secondsString = convertNumberToString(seconds);
+  // Show the current time difference in the view
+  $("#blkTiming").css("color", "#ffffff")
+  $("#blkTiming").html("Deck duration: " + minutesString + " mins, " + secondsString + " secs");
+  // Initiate the deck timer with given input parameters and calculated variables
+  timerDeck = setInterval(function() {
+    // Set start datetime to now
+    dateStart = new Date();
+    // Calculate the time difference between start and end datetime
+    distance = dateEnd - dateStart;
+    // Get the minutes of the calculated time distance
+    minutes = getMinutesFromIntervalTime(distance);
+    minutesString = convertNumberToString(minutes);
+    // Get the seconds of the calculated time distance
+    seconds = getSecondsFromIntervalTime(distance);
+    secondsString = convertNumberToString(seconds);
+    // Show the current time difference in the view
+    $("#blkTiming").css("color", "#ffffff")
+    $("#blkTiming").html("Deck duration: " + minutesString + " mins, " + secondsString + " secs");
+    // If it has reached the end of the duration time,
+    // then stop the timer and show in the view that this time has expired.
     if (distance < 0) {
-      clearInternval(x);
-      document.getElementById("blkTiming").innerHTML = "Expired time for the current deck.";
+      clearInterval(timerDeck);
+      $("#blkTiming").css("color", "#ff0000")
+      $("#blkTiming").html("Expired time for current deck.");
     }
-  }, 1000);
+  }, milliSecInterval);
 }

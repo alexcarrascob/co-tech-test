@@ -8,6 +8,8 @@ var listHands;
 
 // Execute when the view loads.
 $(function () {
+  // Set variable for deck timer initially to null
+  timerDeck = null;
   // Empty the current hands of all players
   listHands = [];
   // Re-initialize the general global variables
@@ -46,6 +48,14 @@ function shuffleDeckAJAX() {
       currentStatusCode = jqXHR.status;
       $("#hidDeckId").val(responseData);
       $("#btnDealCards").prop("disabled", false);
+      // Set datetime at which the current deck was generated to now
+      var startDateTimeDeck = new Date();
+      // Set duration of current deck in milliseconds: 5 minutes
+      var milliSecsDurationDeck = 300000;
+      // Set duration of interval timer in milliseconds: 1 minute
+      var milliSecsIntervalTimer = 1000;
+      // Execute timer for current deck
+      timingDeck(startDateTimeDeck, milliSecsDurationDeck, milliSecsIntervalTimer);
       addMessage(currentStatusCode, nameCurrentService, argsCurrentService, mapActions);
     },
     error: function (jqXHR, textStatus, errorThrown) {
