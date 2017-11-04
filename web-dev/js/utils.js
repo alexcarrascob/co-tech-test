@@ -2,8 +2,6 @@
 // SCRIPT WITH UTILITY FUNCTIONS USED IN THIS PROGRAM
 // ========================================================================
 
-
-
 // Function to log the variable matrixMessages with the response
 // from the current services calls on the web console.
 function logMatrixMessages() {
@@ -64,9 +62,15 @@ function initGeneralVars() {
   codeFinalCurrentService = "";
 }
 
+// Function to initialize the game global variables to their default values.
+function initGameVars() {
+  idxWinner = -1;
+  rankHandPlayer1 = 0;
+  rankHandPlayer2 = 0;
+}
+
 // Function to empty the message components in the view.
 function emptyMessages() {
-  initGeneralVars();
   codeMessage = "";
   typeMessage = "";
   classesMessage = "";
@@ -89,6 +93,8 @@ function emptyAllTableCards() {
   $("#blkTableCardsP1").html("");
   $("#blkTableCardsP2").html("");
 }
+
+
 
 // Function to get the list of defaults actions
 // for error status codes for any service.
@@ -349,60 +355,6 @@ function getSecondsFromIntervalTime(i) {
   return sec;
 }
 
-// Function to execute timer for current deck
-function timingDeck(startDateTime, milliSecsDuration, milliSecInterval) {
-  // Set local variables of the function
-  var minutes = 0;
-  var minutesString = "";
-  var seconds = 0;
-  var secondsString = "";
-  var dateStart = null;
-  var dateEnd = null;
-  var distance = 0;
-  // Get the current datetime as start datetime
-  // dateStart = new Date(startDateTime.getTime());
-  // Set final datetime to the duration time of the current deck
-  // adding the number of milliseconds given in the input parameter milliSecsDuration
-  dateEnd = new Date(startDateTime);
-  dateEnd.setMilliseconds(dateEnd.getMilliseconds() + milliSecsDuration);
-  // Calculate the time difference between start and end datetime
-  // distance = dateEnd - dateStart;
-  distance = milliSecsDuration;
-  // Get the minutes of the calculated time distance
-  minutes = getMinutesFromIntervalTime(distance);
-  minutesString = convertNumberToString(minutes);
-  // Get the seconds of the calculated time distance
-  seconds = getSecondsFromIntervalTime(distance);
-  secondsString = convertNumberToString(seconds);
-  // Show the current time difference in the view
-  $("#blkTiming").css("color", "#ffffff");
-  $("#blkTiming").html("Deck duration: " + minutesString + " mins, " + secondsString + " secs");
-  // Initiate the deck timer with given input parameters and calculated variables
-  console.log("start deck timer");
-  timerDeckID = setInterval(function() {
-    // Set start datetime to now
-    dateStart = new Date();
-    // Calculate the time difference between start and end datetime
-    distance = dateEnd - dateStart;
-    // Get the minutes of the calculated time distance
-    minutes = getMinutesFromIntervalTime(distance);
-    minutesString = convertNumberToString(minutes);
-    // Get the seconds of the calculated time distance
-    seconds = getSecondsFromIntervalTime(distance);
-    secondsString = convertNumberToString(seconds);
-    // Show the current time difference in the view
-    $("#blkTiming").css("color", "#ffffff");
-    $("#blkTiming").html("Deck duration: " + minutesString + " mins, " + secondsString + " secs");
-    // If it has reached the end of the duration time,
-    // then stop the timer and show in the view that this time has expired.
-    if (distance < 0) {
-      clearInterval(timerDeckID);
-      $("#blkTiming").css("color", "#ff0000");
-      $("#blkTiming").html("Expired time for current deck.");
-    }
-  }, milliSecInterval);
-}
-
 function countDown(startDateTime, milliSecsDuration, milliSecInterval){
   var dias=0;
   var horas=0;
@@ -479,4 +431,66 @@ function stopLoading() {
   $("#blkLoading").html("");
   // Hide the loading block
   $("#blkLoading").hide();
+}
+
+// Function to fill content of the loading block
+function fillLoadingContent(contentHTML) {
+  $("#blkLoading").html(contentHTML);
+}
+
+// Funtion to show the loading block
+function showLoadingBlock() {
+  $("#blkLoading").show();
+}
+
+// Funtion to hide the loading block
+function hideLoadingBlock() {
+  $("#blkLoading").hide();
+}
+
+// Funtion to empty and hide the loading block
+function emptyLoading() {
+  // Empty content of loading block
+  fillLoadingContent("");
+  // Hiding the loading block
+  hideLoadingBlock();
+}
+
+// Funtion to fill and show the loading block
+function showLoading(contentHTML) {
+  // Fill the block content with given input
+  fillLoadingContent(contentHTML);
+  // Show the loading block
+  showLoadingBlock();
+}
+
+// Function to fill content of the game result block
+function fillGameResultContent(contentHTML) {
+  $("#blkResult").html(contentHTML);
+}
+
+// Funtion to show the game result block
+function showGameResultBlock() {
+  $("#blkResult").show();
+}
+
+// Funtion to hide the game result block
+function hideGameResultBlock() {
+  $("#blkResult").hide();
+}
+
+// Funtion to empty and hide the game result block
+function emptyGameResults() {
+  // Empty content of game result block
+  fillGameResultContent("");
+  // Hiding the game result block
+  hideGameResultBlock();
+}
+
+// Function to fill and show the game result block
+function showGameResults(contentHTML) {
+  // Fill the block content with given input
+  fillGameResultContent(contentHTML);
+  // Show the game result block
+  showGameResultBlock();
 }

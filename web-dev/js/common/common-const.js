@@ -20,3 +20,5 @@ var totalPlayers = 2;
 var amountCardsByHand = 5;
 var idxPlayer1 = 1;
 var idxPlayer2 = 2;
+var namePlayer1 = "Player #01";
+var namePlayer2 = "Player #02";

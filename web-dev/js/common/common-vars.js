@@ -14,6 +14,7 @@ var fullMessage;
 var descriptionMessage;
 var matrixMessages;
 
-// Variables relative to the players.
-var idxPlayer1;
-var idxPlayer2;
+// Variables relative to the game.
+var idxWinner;
+var rankHandPlayer1;
+var rankHandPlayer2;

@@ -6,22 +6,24 @@
 // of all players in the current game
 var listHands;
 
-
-
 // Execute when the view loads.
 $(function () {
   // Empty the current hands of all players
   listHands = [];
   // Re-initialize the general global variables
   initGeneralVars();
+  // Re-initialize the game global variables
+  initGameVars();
   // Empty the table cards of all the players
   emptyAllTableCards();
   // Empty all the current messages
   emptyMessages();
   // Disable the button for Deal Cards to players.
   $("#btnDealCards").prop("disabled", true);
-  // Hiding initially the block for loading
-  stopLoading();
+  // Empty the loading block
+  emptyLoading();
+  // Empty the game result block
+  emptyGameResults();
 });
 
 // Function AJAX to shuffle the deck.
@@ -72,11 +74,12 @@ function shuffleDeckAJAX() {
 
 // Function to shuffle the deck.
 function shuffleDeck() {
-
   // Empty the current hands of all players
   listHands = [];
   // Re-initialize the general global variables
   initGeneralVars();
+  // Re-initialize the game global variables
+  initGameVars();
   // Empty the table cards of all the players
   emptyAllTableCards();
   //Empty all the current messages
@@ -89,6 +92,18 @@ function shuffleDeck() {
   // Show message of the service
   showMessage();
   // logMatrixMessages();
+}
+
+// Funtion to determine the result of the current game
+function checkGameResult() {
+  emptyGameResults();
+  emptyMessages();
+  checkHands();
+  if (idxWinner == 0) {
+    checkHighestValueCard();
+  }
+  var msj = setGameResultMessage();
+  showGameResults(msj);
 }
 
 function dealAllCardsAJAX() {
@@ -133,6 +148,8 @@ function dealAllCardsAJAX() {
         currentHand["cards"] = responseData;
         listHands.push(currentHand);
         addMessage(currentStatusCode, nameCurrentService, argsCurrentService, mapActions);
+        // Check the game result and show it in the view
+        checkGameResult(listHands);
       },
       error: function (jqXHR, textStatus, errorThrown) {
         // Stop animation of the loading block
@@ -154,6 +171,8 @@ function dealAllCards() {
   listHands = [];
   // Re-initialize the general global variables
   initGeneralVars();
+  // Re-initialize the game global variables
+  initGameVars();
   // Empty the table cards of all the players
   emptyAllTableCards();
   //Empty all the current messages
