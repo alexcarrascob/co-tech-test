@@ -38,54 +38,79 @@ function isJSON(input) {
 // Function to convert any data type to its representation in String.
 // It's useful for show log messages during debug phase.
 function typeOf(data) {
+  console.log("ini function typeOf");
   try {
     if (typeof data == "string") {
+      console.log("-> string");
+      console.log("end function typeOf");
       return "STRING";
     }
     if (typeof data == "number") {
+      console.log("number");
+      console.log("end function typeOf");
       return "NUMBER";
     }
     if (typeof data == "boolean") {
+      console.log("-> boolean");
+      console.log("end function typeOf");
       return "BOOLEAN";
     }
     if (typeof data == "object") {
+      console.log("-> object:\n" + data);
       if (Array.isArray(data)) {
+        console.log("-> array");
+        console.log("end function typeOf");
         return "ARRAY";
       }
       if (isJSON(data)) {
+        console.log("-> json");
+        console.log("end function typeOf");
         return "JSON";
       }
+      console.log("end function typeOf");
       return "OBJECT";
     }
     if (typeof data == "function") {
+      console.log("-> function");
+      console.log("end function typeOf");
       return "FUNCTION";
     }
     if (typeof data == "symbol") {
+      console.log("-> symbol");
+      console.log("end function typeOf");
       return "SYMBOL";
     }
     if (typeof data == "undefined") {
+      console.log("-> undefined");
+      console.log("end function typeOf");
       return "UNDEFINED";
     }
   } catch (e) {
-    return "<ERROR> : " + e.name + " - " + e.message;
+    console.log("-> error");
+    console.log("end function typeOf");
+    return "ERROR : " + e.name + " - " + e.message;
   }
 }
 
 function convertToString(data) {
+  console.log("ini function convertToString");
   try {
     var t = typeOf(data);
     switch (t) {
       case "STRING":
+        console.log("-> STRING");
+        console.log("end function convertToString");
         return data;
-        break;
       case "NUMBER":
+        console.log("-> NUMBER");
+        console.log("end function convertToString");
         return data.toString();
-        break;
       case "BOOLEAN":
+        console.log("-> BOOLEAN");
+        console.log("end function convertToString");
         return data.toString();
-        break;
-      case "ARRAY": // TODO: call recursively to this same function for every component of the input array data
-        // return data.toString();
+      case "ARRAY":
+        console.log("-> ARRAY");
         var elem = "";
         var output = "";
         output += "[";
@@ -97,26 +122,45 @@ function convertToString(data) {
           }
         }
         output += "]";
-        break;
-      case "JSON": // TODO: call recursively to this same function for every component of the input JSON data
+        console.log("end function convertToString");
+        return output;
+      case "JSON":
+        console.log("JSON");
+        var i = 0;
+        var output = "{";
+        for (var elem in data) {
+          output += elem + ":" + data[elem];
+          if (i < (data.length-1)) {
+            output += ",";
+          }
+          i++;
+        }
+        output += "}";
+        console.log("end function convertToString");
         return JSON.stringify();
-        break;
       case "SYMBOL":
+        console.log("-> SYMBOL");
+        console.log("end function convertToString");
         return data.toString();
-        break;
       case "OBJECT":
-        return "<OBJECT>";
-        break;
+        console.log("-> OBJECT");
+        console.log("end function convertToString");
+        return "OBJECT";
       case "FUNCTION":
-        return "<FUNCTION>";
-        break;
+        console.log("-> FUNCTION");
+        console.log("end function convertToString");
+        return "FUNCTION";
       case "UNDEFINED":
-        return "<UNDEFINED>";
-        break;
+        console.log("-> UNDEFINED");
+        console.log("end function convertToString");
+        return "UNDEFINED";
       default:
+        console.log("-> default");
         throw data;
     }
   } catch (e) {
+    console.log(e);
+    console.log("end function convertToString");
     return e;
   }
 }

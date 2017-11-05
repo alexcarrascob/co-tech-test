@@ -96,7 +96,7 @@ function getHighestCard(hand) {
   var maxScore = 0;
   var maxCard = null;
   var currentScore = 0;
-  for (var i = 0; i < hand.amountCards; i++) {
+  for (var i = 0; i < hand.cards.length; i++) {
     currentScore = getCardScore(hand.cards[i]);
     if(currentScore >= maxScore) {
       maxScore = currentScore;
@@ -129,7 +129,9 @@ function checkHighestValueCard(listHands, amountCards) {
         return maxCardPlayer2.index;
     } else {
       listHands[0].cards.shift();
+      listHands[0].amountCards = listHands[0].amountCards - 1;
       listHands[1].cards.shift();
+      listHands[1].amountCards = listHands[1].amountCards - 1;
       var newAmountCards = amountCards - 1;
       console.log("call recursively checkHighestValueCard");
       return checkHighestValueCard(listHands, newAmountCards);
@@ -204,7 +206,7 @@ function checkMoveStraight(hand) {
 // Function to verify the movement of the Poker game
 // called "Flush".
 function checkMoveFlush(hand) {
-  return checkEqualNumberCards(hand.cards, hand.cards[0].suit, hand.amountCards);
+  return checkEqualNumberCards(hand.cards, hand.cards[0].suit, hand.cards.length);
 }
 
 // Function to verify the movement of the Poker game
