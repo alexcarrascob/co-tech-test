@@ -304,7 +304,8 @@ function paintAllTableCards() {
 
 // Function to set the message of the game result.
 function setGameResultMessage() {
-  // console.log("idxWinner = " + idxWinner);
+  console.log("ini function setGameResultMessage");
+  console.log("-> idxWinner=" + idxWinner);
   var result = "";
   switch (idxWinner) {
     case 1:
@@ -320,18 +321,25 @@ function setGameResultMessage() {
       result = "Unknown result";
       break;
   }
+  console.log("return result=" + result);
+  console.log("end function setGameResultMessage");
   return result;
 }
 
 // Funtion to determine the result of the current game
 function checkGameResult(listHands) {
+  console.log("ini function checkGameResult");
+  console.log("param listHands=\n" + convertToString(listHands));
+  console.log("-> codeFinalCurrentService=" + codeFinalCurrentService);
   if (codeFinalCurrentService == "OK") {
     emptyMessages();
-    // emptyGameResults();
     checkHands(listHands);
-    console.log(idxWinner);
+    console.log("-> idxWinner=" + idxWinner);
     var msj = setGameResultMessage();
     showGameResults(msj);
+    console.log("end function checkGameResult");
+  } else {
+    console.clear();
   }
 }
 
