@@ -13,3 +13,13 @@ function convertNumberToString(number) {
   }
   return numString;
 }
+
+function getMaxNumber(listNumbers) {
+  var maxNumber = Number.MIN_SAFE_INTEGER;
+  for (var i = 0; i < listNumbers.length; i++) {
+    if (listNumbers[i] >= maxNumber) {
+      maxNumber = listNumbers[i];
+    }
+  }
+  return maxNumber;
+}

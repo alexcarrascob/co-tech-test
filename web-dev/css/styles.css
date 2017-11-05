@@ -139,9 +139,25 @@ section > h3 {
 }
 
 #blkResultPoker {
+  position: relative;
   display: block;
   border-width: 0px;
   width: 475px;
   height: 75px;
   text-align: center;
 }
+ #blkLoading {
+   height: 50px;
+   display: flex;
+   align-items: center;
+ }
+
+ #blkResult {
+   position: absolute;
+   height: 50px;
+   top: 0;
+   bottom: 0;
+   margin: auto;
+   display: flex;
+   align-items: center;
+ }

@@ -302,6 +302,39 @@ function paintAllTableCards() {
   }
 }
 
+// Function to set the message of the game result.
+function setGameResultMessage() {
+  // console.log("idxWinner = " + idxWinner);
+  var result = "";
+  switch (idxWinner) {
+    case 1:
+      result = "The winner of this game is: " + namePlayer1 + "!";
+      break;
+    case 2:
+      result = "The winner of this game is: " + namePlayer2 + "!";
+      break;
+    case 0:
+      result = "It's a tie!";
+      break;
+    default:
+      result = "Unknown result";
+      break;
+  }
+  return result;
+}
+
+// Funtion to determine the result of the current game
+function checkGameResult(listHands) {
+  if (codeFinalCurrentService == "OK") {
+    emptyMessages();
+    // emptyGameResults();
+    checkHands(listHands);
+    console.log(idxWinner);
+    var msj = setGameResultMessage();
+    showGameResults(msj);
+  }
+}
+
 // Function to paint the table cards of a specific player.
 function paintTableCardsForPlayer(idxPlayer, amountCards, dataCards) {
   var html = "";
@@ -406,7 +439,6 @@ function stopTimer() {
   // Hide the block for current deck timing
   $("#blkTiming").hide();
   // Stop the current deck timer
-  console.log("stop deck timer");
   clearInterval(timerDeckID);
   // Set default style of timing block
   $("#blkTiming").css("color", "#ffffff");

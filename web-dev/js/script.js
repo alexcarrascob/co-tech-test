@@ -18,6 +18,8 @@ $(function () {
   emptyAllTableCards();
   // Empty all the current messages
   emptyMessages();
+  // Empty the past game result
+  emptyGameResults();
   // Disable the button for Deal Cards to players.
   $("#btnDealCards").prop("disabled", true);
   // Empty the loading block
@@ -84,6 +86,8 @@ function shuffleDeck() {
   emptyAllTableCards();
   //Empty all the current messages
   emptyMessages();
+  // Empty the past game result
+  emptyGameResults();
   // Deal cards from deck to Player #1
   shuffleDeckAJAX();
   // Set the final status code of the current service
@@ -91,19 +95,6 @@ function shuffleDeck() {
   setFinalStatusCodeService();
   // Show message of the service
   showMessage();
-  // logMatrixMessages();
-}
-
-// Funtion to determine the result of the current game
-function checkGameResult() {
-  emptyGameResults();
-  emptyMessages();
-  checkHands();
-  if (idxWinner == 0) {
-    checkHighestValueCard();
-  }
-  var msj = setGameResultMessage();
-  showGameResults(msj);
 }
 
 function dealAllCardsAJAX() {
@@ -148,8 +139,6 @@ function dealAllCardsAJAX() {
         currentHand["cards"] = responseData;
         listHands.push(currentHand);
         addMessage(currentStatusCode, nameCurrentService, argsCurrentService, mapActions);
-        // Check the game result and show it in the view
-        checkGameResult(listHands);
       },
       error: function (jqXHR, textStatus, errorThrown) {
         // Stop animation of the loading block
@@ -177,6 +166,8 @@ function dealAllCards() {
   emptyAllTableCards();
   //Empty all the current messages
   emptyMessages();
+  // Empty the past game result
+  emptyGameResults();
   // Deal cards from deck to all players
   dealAllCardsAJAX();
   // Set the final status code of the current service
@@ -186,5 +177,6 @@ function dealAllCards() {
   paintAllTableCards();
   // Show message of the service
   showMessage();
-  // logMatrixMessages();
+  // Check the game result and show it in the view
+  checkGameResult(listHands);
 }
