@@ -79,70 +79,6 @@ function checkAllConsecutiveNumbersCards(listCards) {
   return true;
 }
 
-// Function to get the score of a card, according to its number.
-function getCardScore(card) {
-  var upperNumber = card.number.toUpperCase();
-  var scoreNumber = mapNumberScore[upperNumber];
-  return scoreNumber;
-}
-
-// Function to get the highest card value of the input hand.
-function getHighestCard(hand) {
-  console.log("ini function getHighestCard");
-  console.log("param hand:\n" + convertToString(hand));
-  console.log("-> hand.index=" + hand.index);
-  console.log("-> hand.amountCards=" + hand.amountCards);
-  console.log("-> hand.cards=\n" + convertToString(hand.cards));
-  var maxScore = 0;
-  var maxCard = null;
-  var currentScore = 0;
-  for (var i = 0; i < hand.cards.length; i++) {
-    currentScore = getCardScore(hand.cards[i]);
-    if(currentScore >= maxScore) {
-      maxScore = currentScore;
-      maxCard = hand.cards[i];
-    }
-  }
-  console.log("-> maxScore=" + maxScore);
-  console.log("-> maxCard=\n" + convertToString(maxCard));
-  console.log("end function getHighestCard");
-  return maxCard;
-}
-
-// Funtion to check the highest value card of all players.
-function checkHighestValueCard(listHands, amountCards) {
-  console.log("ini function checkHighestValueCard");
-  console.log("-> amountCards=" + amountCards);
-  console.log("-> listHands=\n" + convertToString(listHands));
-  if (amountCards != 0) {
-    var maxCardPlayer1 = getHighestCard(listHands[0]);
-    var scoreMaxCardPlayer1 = getCardScore(maxCardPlayer1);
-    var maxCardPlayer2 = getHighestCard(listHands[1]);
-    var scoreMaxCardPlayer2 = getCardScore(maxCardPlayer2);
-    if (scoreMaxCardPlayer1 > scoreMaxCardPlayer2) {
-      console.log("return player1=" + maxCardPlayer1.index);
-      console.log("end function checkHighestValueCard");
-      return maxCardPlayer1.index;
-    } else if (scoreMaxCardPlayer1 < scoreMaxCardPlayer2) {
-        console.log("return player2=" + maxCardPlayer2.index);
-        console.log("end function checkHighestValueCard");
-        return maxCardPlayer2.index;
-    } else {
-      listHands[0].cards.shift();
-      listHands[0].amountCards = listHands[0].amountCards - 1;
-      listHands[1].cards.shift();
-      listHands[1].amountCards = listHands[1].amountCards - 1;
-      var newAmountCards = amountCards - 1;
-      console.log("call recursively checkHighestValueCard");
-      return checkHighestValueCard(listHands, newAmountCards);
-    }
-  } else {
-    console.log("return tie=0");
-    console.log("end function checkHighestValueCard");
-    return 0;
-  }
-}
-
 // Function to verify the movement of the Poker game
 // called "One Pair".
 function checkMoveOnePair(hand) {
@@ -331,6 +267,70 @@ function rankHand(hand) {
   console.log("-> rank=" + rank);
   console.log("end function rankHand");
   return rank;
+}
+
+// Function to get the score of a card, according to its number.
+function getCardScore(card) {
+  var upperNumber = card.number.toUpperCase();
+  var scoreNumber = mapNumberScore[upperNumber];
+  return scoreNumber;
+}
+
+// Function to get the highest card value of the input hand.
+function getHighestCard(hand) {
+  console.log("ini function getHighestCard");
+  console.log("param hand:\n" + convertToString(hand));
+  console.log("-> hand.index=" + hand.index);
+  console.log("-> hand.amountCards=" + hand.amountCards);
+  console.log("-> hand.cards=\n" + convertToString(hand.cards));
+  var maxScore = 0;
+  var maxCard = null;
+  var currentScore = 0;
+  for (var i = 0; i < hand.cards.length; i++) {
+    currentScore = getCardScore(hand.cards[i]);
+    if(currentScore >= maxScore) {
+      maxScore = currentScore;
+      maxCard = hand.cards[i];
+    }
+  }
+  console.log("-> maxScore=" + maxScore);
+  console.log("-> maxCard=\n" + convertToString(maxCard));
+  console.log("end function getHighestCard");
+  return maxCard;
+}
+
+// Funtion to check the highest value card of all players.
+function checkHighestValueCard(listHands, amountCards) {
+  console.log("ini function checkHighestValueCard");
+  console.log("-> amountCards=" + amountCards);
+  console.log("-> listHands=\n" + convertToString(listHands));
+  if (amountCards != 0) {
+    var maxCardPlayer1 = getHighestCard(listHands[0]);
+    var scoreMaxCardPlayer1 = getCardScore(maxCardPlayer1);
+    var maxCardPlayer2 = getHighestCard(listHands[1]);
+    var scoreMaxCardPlayer2 = getCardScore(maxCardPlayer2);
+    if (scoreMaxCardPlayer1 > scoreMaxCardPlayer2) {
+      console.log("return player1=" + maxCardPlayer1.index);
+      console.log("end function checkHighestValueCard");
+      return maxCardPlayer1.index;
+    } else if (scoreMaxCardPlayer1 < scoreMaxCardPlayer2) {
+        console.log("return player2=" + maxCardPlayer2.index);
+        console.log("end function checkHighestValueCard");
+        return maxCardPlayer2.index;
+    } else {
+      listHands[0].cards.shift();
+      listHands[0].amountCards = listHands[0].amountCards - 1;
+      listHands[1].cards.shift();
+      listHands[1].amountCards = listHands[1].amountCards - 1;
+      var newAmountCards = amountCards - 1;
+      console.log("call recursively checkHighestValueCard");
+      return checkHighestValueCard(listHands, newAmountCards);
+    }
+  } else {
+    console.log("return tie=0");
+    console.log("end function checkHighestValueCard");
+    return 0;
+  }
 }
 
 // Function to check the card hands of all players.

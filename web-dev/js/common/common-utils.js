@@ -27,8 +27,12 @@ function getMaxNumber(listNumbers) {
 
 // Function to check if the input data is JSON type.
 function isJSON(input) {
+  var temp = null;
+  if (typeof temp != "string") {
+    temp = JSON.stringify(input);
+  }
   try {
-    JSON.parse(input);
+    JSON.parse(temp);
     return true;
   } catch (e) {
     return false;
@@ -38,79 +42,79 @@ function isJSON(input) {
 // Function to convert any data type to its representation in String.
 // It's useful for show log messages during debug phase.
 function typeOf(data) {
-  console.log("ini function typeOf");
+  // console.log("ini function typeOf");
   try {
     if (typeof data == "string") {
-      console.log("-> string");
-      console.log("end function typeOf");
+      // console.log("-> string");
+      // console.log("end function typeOf");
       return "STRING";
     }
     if (typeof data == "number") {
-      console.log("number");
-      console.log("end function typeOf");
+      // console.log("-> number");
+      // console.log("end function typeOf");
       return "NUMBER";
     }
     if (typeof data == "boolean") {
-      console.log("-> boolean");
-      console.log("end function typeOf");
+      // console.log("-> boolean");
+      // console.log("end function typeOf");
       return "BOOLEAN";
     }
     if (typeof data == "object") {
-      console.log("-> object:\n" + data);
       if (Array.isArray(data)) {
-        console.log("-> array");
-        console.log("end function typeOf");
+        // console.log("--> object: array");
+        // console.log("end function typeOf");
         return "ARRAY";
       }
       if (isJSON(data)) {
-        console.log("-> json");
-        console.log("end function typeOf");
+        // console.log("--> object: json");
+        // console.log("end function typeOf");
         return "JSON";
       }
-      console.log("end function typeOf");
+      // console.log("--> object: other kind of object");
+      // console.log("end function typeOf");
       return "OBJECT";
     }
     if (typeof data == "function") {
-      console.log("-> function");
-      console.log("end function typeOf");
+      // console.log("-> function");
+      // console.log("end function typeOf");
       return "FUNCTION";
     }
     if (typeof data == "symbol") {
-      console.log("-> symbol");
-      console.log("end function typeOf");
+      // console.log("-> symbol");
+      // console.log("end function typeOf");
       return "SYMBOL";
     }
     if (typeof data == "undefined") {
-      console.log("-> undefined");
-      console.log("end function typeOf");
+      // console.log("-> undefined");
+      // console.log("end function typeOf");
       return "UNDEFINED";
     }
   } catch (e) {
-    console.log("-> error");
-    console.log("end function typeOf");
+    // console.log("-> error");
+    // console.log("end function typeOf");
     return "ERROR : " + e.name + " - " + e.message;
   }
 }
 
 function convertToString(data) {
-  console.log("ini function convertToString");
+  // console.log("ini function convertToString");
   try {
     var t = typeOf(data);
     switch (t) {
       case "STRING":
-        console.log("-> STRING");
-        console.log("end function convertToString");
+        // console.log("-> STRING");
+        // console.log("end function convertToString");
         return data;
       case "NUMBER":
-        console.log("-> NUMBER");
-        console.log("end function convertToString");
+        // console.log("-> NUMBER");
+        // console.log("end function convertToString");
         return data.toString();
       case "BOOLEAN":
-        console.log("-> BOOLEAN");
-        console.log("end function convertToString");
+        // console.log("-> BOOLEAN");
+        // console.log("end function convertToString");
         return data.toString();
       case "ARRAY":
-        console.log("-> ARRAY");
+        // console.log("-> ARRAY");
         var elem = "";
         var output = "";
         output += "[";
@@ -122,10 +126,10 @@ function convertToString(data) {
           }
         }
         output += "]";
-        console.log("end function convertToString");
+        // console.log("end function convertToString");
         return output;
       case "JSON":
-        console.log("JSON");
+        // console.log("JSON");
         var i = 0;
         var output = "{";
         for (var elem in data) {
@@ -136,31 +140,31 @@ function convertToString(data) {
           i++;
         }
         output += "}";
-        console.log("end function convertToString");
+        // console.log("end function convertToString");
         return JSON.stringify();
       case "SYMBOL":
-        console.log("-> SYMBOL");
-        console.log("end function convertToString");
+        // console.log("-> SYMBOL");
+        // console.log("end function convertToString");
         return data.toString();
       case "OBJECT":
-        console.log("-> OBJECT");
-        console.log("end function convertToString");
+        // console.log("-> OBJECT");
+        // console.log("end function convertToString");
         return "OBJECT";
       case "FUNCTION":
-        console.log("-> FUNCTION");
-        console.log("end function convertToString");
+        // console.log("-> FUNCTION");
+        // console.log("end function convertToString");
         return "FUNCTION";
       case "UNDEFINED":
-        console.log("-> UNDEFINED");
-        console.log("end function convertToString");
+        // console.log("-> UNDEFINED");
+        // console.log("end function convertToString");
         return "UNDEFINED";
       default:
-        console.log("-> default");
+        // console.log("-> default");
         throw data;
     }
   } catch (e) {
-    console.log(e);
-    console.log("end function convertToString");
+    // console.log(e);
+    // console.log("end function convertToString");
     return e;
   }
 }
